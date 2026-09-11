@@ -12,6 +12,7 @@
     if(!window.ReactDOM)await load('https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js');
     if(!window.Babel)await load('https://unpkg.com/@babel/standalone@7.29.0/babel.min.js');
     await waitBabel();
+    if(window.ggDsBundle)await window.ggDsBundle;
     if(!window.GG_boot)await load(base+'ui_kits/shared/kit-base.js');
     await window.GG_loadApp(kit,name,base);
   })();

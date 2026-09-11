@@ -11,11 +11,12 @@ window.GG_DATA={
   languages:[['en','English','English','ltr','United Kingdom, United States','aaaa',true,true],['es-419','Español','Spanish (Latin America)','ltr','Latin America','aaai',true,true],['fr','Français','French','ltr','France, West Africa','aaaa',true,true],['hi','हिन्दी','Hindi','ltr','India','aaai',true,true],['ar','العربية','Arabic','rtl','Middle East, North Africa','aaaa',true,true],['sw','Kiswahili','Swahili','ltr','Tanzania, Kenya','aaii',true,true],['ne','नेपाली','Nepali','ltr','Nepal','aiin',true,false],['tpi','Tok Pisin','Tok Pisin','ltr','Papua New Guinea','aain',true,false],['gu','ગુજરાતી','Gujarati','ltr','India','aaan',false,false],['fa','فارسی','Persian','rtl','Iran, Afghanistan','niin',false,false],['km','ខ្មែរ','Khmer','ltr','Cambodia','nnnn',false,false]].map(([code,autonym,english,dir,region,coverage,gateway,localized])=>({code,autonym,english,dir,region,coverage,gateway,localized})),
   progress:[{book:'Ruth',chapters:['done','done','revise','translate']},{book:'Jonah',chapters:['done','revise','understand','understand']},{book:'Mark',chapters:['revise','translate','translate','understand','understand',null,null,null,null,null,null,null,null,null,null,null]}]
 };
-window.GG_NS=()=>window.GenerativeGlassDesignSystem_1a4c8e||window.GenerativeGlass||{};
+window.GG_NS=()=>window.GenerativeGlassDesignSystem_1a4c8e||window.GenerativeGlass||Object.values(window).find(v=>v&&v.GlassSurface&&v.ScripturePassage)||{};
 
 // Boot: prefer the compiled bundle; fall back to components-loader.js (in-browser transpile) while the bundle is absent.
 window.GG_boot=async function(src,base='../../'){
-  if(!window.GenerativeGlassDesignSystem_1a4c8e){const base=document.currentScript?'':'';const s=document.createElement('script');s.src=base+'components-loader.js';document.head.appendChild(s);await new Promise(r=>{const t=()=>window.ggComponentsReady?window.ggComponentsReady.then(r):setTimeout(t,60);t();});}
+  const ready=()=>{const n=typeof window.GG_NS==='function'?window.GG_NS():window.GG_NS;return n&&n.GlassSurface};
+  if(!ready()){const s=document.createElement('script');s.src=base+'components-loader.js';document.head.appendChild(s);await new Promise(r=>{const t=()=>ready()?r():window.ggComponentsReady?window.ggComponentsReady.then(r):setTimeout(t,60);t();});}
   const code=await (await fetch(src)).text();
   const out=Babel.transform(code,{presets:['react'],filename:src}).code;
   const el=document.createElement('script');el.textContent=out;document.body.appendChild(el);

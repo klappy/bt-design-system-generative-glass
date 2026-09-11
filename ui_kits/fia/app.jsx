@@ -1,5 +1,5 @@
 {
-const NS=window.GG_NS();const {GlassSurface,GlassButton,GlassChip,GlassIconButton,Icon,ScripturePassage,KeyTermPopover,SyncBadge,ResourceStack,ResourceCard,ProgressGrid,GlassTabBar,GlassSheet,GlassSegmented,StatusBar,GlassSearch,FilterChips}=NS;const D=window.GG_DATA;const M=D.media;
+const NS=(typeof window.GG_NS==='function'?window.GG_NS():window.GG_NS)||Object.values(window).find(v=>v&&v.GlassSurface&&v.ScripturePassage)||{};const {GlassSurface,GlassButton,GlassChip,GlassIconButton,Icon,ScripturePassage,KeyTermPopover,SyncBadge,ResourceStack,ResourceCard,ProgressGrid,GlassTabBar,GlassSheet,GlassSegmented,StatusBar,GlassSearch,FilterChips}=NS;const D=window.GG_DATA;const M=D.media;
 const OV={font:'var(--type-overline)',letterSpacing:'var(--ls-overline)',textTransform:'uppercase',color:'var(--text-muted)'};
 const VERS={BSB:{verses:D.ruthBSB,script:'latin',dir:'ltr',lang:'en',source:'Aquifer · BereanStandardBible'},AVD:{verses:D.ruthAVD,script:'arabic',dir:'rtl',lang:'ar',source:'Aquifer · ArabicVanDyckBible'},IRV:{verses:D.ruthIRV,script:'devanagari',dir:'ltr',lang:'hi',source:'Aquifer · IndianRevisedVersion'}};
 const STEPS=['Familiarization','Internalization','Articulation'];

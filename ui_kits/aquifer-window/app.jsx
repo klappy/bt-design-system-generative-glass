@@ -1,5 +1,5 @@
 {
-const NS=window.GG_NS();const {GlassSurface,GlassButton,GlassChip,GlassIconButton,Icon,ResourceCard,CatalogRow,LanguagePicker,GlassSearch,FilterChips,GlassSegmented,GlassSelect,SyncBadge,Avatar}=NS;const D=window.GG_DATA;const M=D.media;
+const NS=(typeof window.GG_NS==='function'?window.GG_NS():window.GG_NS)||Object.values(window).find(v=>v&&v.GlassSurface&&v.ScripturePassage)||{};const {GlassSurface,GlassButton,GlassChip,GlassIconButton,Icon,ResourceCard,CatalogRow,LanguagePicker,GlassSearch,FilterChips,GlassSegmented,GlassSelect,SyncBadge,Avatar}=NS;const D=window.GG_DATA;const M=D.media;
 const OV={font:'var(--type-overline)',letterSpacing:'var(--ls-overline)',textTransform:'uppercase',color:'var(--text-muted)'};
 const LANG=Object.fromEntries(D.languages.map(l=>[l.code,l]));
 
