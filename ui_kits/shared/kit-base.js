@@ -16,7 +16,7 @@ window.GG_NS=()=>window.GenerativeGlassDesignSystem_1a4c8e||window.GenerativeGla
 // Boot: prefer the compiled bundle; fall back to components-loader.js (in-browser transpile) while the bundle is absent.
 window.GG_boot=async function(src,base='../../'){
   const ready=()=>{const n=typeof window.GG_NS==='function'?window.GG_NS():window.GG_NS;return n&&n.GlassSurface};
-  if(!ready()){const s=document.createElement('script');s.src=base+'components-loader.js';document.head.appendChild(s);await new Promise(r=>{const t=()=>ready()?r():window.ggComponentsReady?window.ggComponentsReady.then(r):setTimeout(t,60);t();});}
+  if(!ready()){const s=document.createElement('script');s.src=base+'components-loader.js';document.head.appendChild(s);await new Promise(r=>{const t=()=>window.ggComponentsReady?window.ggComponentsReady.then(r):ready()?r():setTimeout(t,60);t();});}
   const code=await (await fetch(src)).text();
   const out=Babel.transform(code,{presets:['react'],filename:src}).code;
   const el=document.createElement('script');el.textContent=out;document.body.appendChild(el);
