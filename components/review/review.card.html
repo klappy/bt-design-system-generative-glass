@@ -1,0 +1,20 @@
+<!-- @dsCard group="Components" viewport="700x300" name="Review" subtitle="ReviewThread open and resolved" -->
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>*{box-sizing:border-box}body{margin:0;font-family:var(--font-core);background:var(--aurora-field);-webkit-font-smoothing:antialiased;min-height:100vh;color:var(--text-title)}#root{padding:18px;width:700px}</style>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const NS=window.GenerativeGlassDesignSystem_830e44||Object.values(window).find(v=>v&&v.GlassSurface&&v.ScripturePassage)||{};
+const {GlassSurface,GlassButton,GlassChip,GlassIconButton,GlassInput,Icon,ScripturePassage,KeyTermPopover,SyncBadge,ReviewThread,ProgressGrid,SurveyQuestion,ResourceCard,ResourceStack,CatalogRow,LanguagePicker,GlassTabBar,GlassSheet,DesktopShell,GlassField,GlassSelect,GlassToggle,GlassSegmented,GlassSearch,FilterChips,ProjectConstellation}=NS;
+
+const comments=[{name:'Miriam',role:'Translator',when:'yesterday',text:'“Happened to come” reads as pure chance here. Our word for it implies nobody arranged it, which cuts against the narrator’s wink.'},{name:'Joel',role:'Consultant',when:'2 h ago',text:'Agree. Ruth 2:3 is deliberately understated. Try the idiom for “as it turned out”.'}];
+function Card(){const [r,setR]=React.useState(false);return <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+  <ReviewThread anchor="Ruth 2:3" comments={comments} resolved={r} onToggleResolved={()=>setR(!r)}/>
+  <ReviewThread anchor="Ruth 2:4" comments={comments.slice(0,1)} resolved/>
+</div>}
+ReactDOM.createRoot(document.getElementById('root')).render(<Card/>);
+</script></body></html>

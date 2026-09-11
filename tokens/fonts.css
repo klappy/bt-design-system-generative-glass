@@ -1,0 +1,28 @@
+/* UI type: SF Pro Display / SF Pro Text, supplied by the project owner. Apple's licence
+   covers Apple platforms and UI design work for them; the binaries stay out of public repos
+   (CoS door). When they are absent the stacks below fall back to the system font.
+   Scripture type: one Noto Serif reading face per script (OFL), loaded from Google Fonts.
+   UI never changes with the scripture language; only the passage does. */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;500&family=Noto+Serif+Hebrew:wght@400;500&family=Noto+Naskh+Arabic:wght@400;500&family=Noto+Serif+Devanagari:wght@400;500&family=Noto+Serif+Gujarati:wght@400;500&family=Noto+Serif+TC:wght@400;500&display=swap");
+@font-face{font-family:'SF Pro Display';src:url("../assets/fonts/SF-Pro-Display-Regular.otf") format("opentype");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'SF Pro Display';src:url("../assets/fonts/SF-Pro-Display-Medium.otf") format("opentype");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'SF Pro Display';src:url("../assets/fonts/SF-Pro-Display-Semibold.otf") format("opentype");font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:'SF Pro Display';src:url("../assets/fonts/SF-Pro-Display-Bold.otf") format("opentype");font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'SF Pro Text';src:url("../assets/fonts/SF-Pro-Text-Regular.otf") format("opentype");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'SF Pro Text';src:url("../assets/fonts/SF-Pro-Text-Medium.otf") format("opentype");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'SF Pro Text';src:url("../assets/fonts/SF-Pro-Text-Semibold.otf") format("opentype");font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:'SF Pro Text';src:url("../assets/fonts/SF-Pro-Text-Bold.otf") format("opentype");font-weight:700;font-style:normal;font-display:swap}
+:root{
+  --font-core:"SF Pro Display","SF Pro Text",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --font-text:"SF Pro Text","SF Pro Display",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --font-numeric:"SF Pro Display",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --font-mono:ui-monospace,"SF Mono",Menlo,monospace;
+  /* Scripture reading faces, one per script. Pick by the passage's script, never by UI locale. */
+  --font-scripture-latin:"Noto Serif","SF Pro Text",Georgia,serif;
+  --font-scripture-hebrew:"Noto Serif Hebrew","SBL Hebrew","Times New Roman",serif;
+  --font-scripture-greek:"Noto Serif","SBL Greek","Times New Roman",serif;
+  --font-scripture-arabic:"Noto Naskh Arabic","Scheherazade New","Amiri",serif;
+  --font-scripture-devanagari:"Noto Serif Devanagari","Kohinoor Devanagari","Mangal",serif;
+  --font-scripture-gujarati:"Noto Serif Gujarati",serif;
+  --font-scripture-han:"Noto Serif TC","Songti TC",serif;
+}

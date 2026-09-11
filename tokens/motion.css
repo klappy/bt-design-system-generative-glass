@@ -1,0 +1,23 @@
+:root{
+  /* Nothing snaps. Everything eases out long and settles. */
+  --ease-liquid:cubic-bezier(.22,1,.36,1); /* @kind other */
+  --ease-swell:cubic-bezier(.34,1.56,.64,1); /* @kind other */   /* slight scale overshoot on entry */
+  --ease-damp:cubic-bezier(.4,0,.2,1); /* @kind other */
+  --ease-flow:cubic-bezier(.65,0,.35,1); /* @kind other */
+  --dur-micro:140ms; /* @kind other */
+  --dur-fast:240ms; /* @kind other */
+  --dur-base:420ms; /* @kind other */
+  --dur-slow:680ms; /* @kind other */
+  --dur-morph:1100ms /* @kind other */;
+  --float-cycle:6s; /* @kind other */
+  --t-hover:opacity var(--dur-fast) var(--ease-liquid),transform var(--dur-fast) var(--ease-liquid),box-shadow var(--dur-fast) var(--ease-liquid); /* @kind other */
+  --t-morph:all var(--dur-morph) var(--ease-liquid); /* @kind other */
+  --press-scale:.972; /* @kind other */
+  --hover-lift:translateY(-1px); /* @kind other */
+}
+@keyframes gg-rise{from{opacity:0;transform:translateY(14px) scale(.94);filter:blur(8px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes gg-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes gg-breathe{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:.9;transform:scale(1.04)}}
+@keyframes gg-draw{from{stroke-dashoffset:var(--gg-dash,200)}to{stroke-dashoffset:0}}
+@keyframes gg-drift{0%{transform:translate3d(0,0,0) scale(1)}33%{transform:translate3d(3%,-2%,0) scale(1.06)}66%{transform:translate3d(-2%,3%,0) scale(1.03)}100%{transform:translate3d(0,0,0) scale(1)}}
+@media (prefers-reduced-motion:reduce){:root{--dur-base:1ms; /* @kind other */--dur-slow:1ms; /* @kind other */--dur-morph:1ms /* @kind other */}}

@@ -1,0 +1,27 @@
+<!-- @dsCard group="Components" viewport="700x300" name="Glass primitives" subtitle="GlassSurface levels, buttons, icon buttons, chips, input, ring, filament, avatar" -->
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>*{box-sizing:border-box}body{margin:0;font-family:var(--font-core);background:var(--aurora-field);-webkit-font-smoothing:antialiased;min-height:100vh;color:var(--text-title)}#root{padding:18px;width:700px}</style>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const NS=window.GenerativeGlassDesignSystem_830e44||Object.values(window).find(v=>v&&v.GlassSurface&&v.ScripturePassage)||{};
+const {GlassSurface,GlassButton,GlassChip,GlassIconButton,GlassInput,Icon,ScripturePassage,KeyTermPopover,SyncBadge,ReviewThread,ProgressGrid,SurveyQuestion,ResourceCard,ResourceStack,CatalogRow,LanguagePicker,GlassTabBar,GlassSheet,DesktopShell,GlassField,GlassSelect,GlassToggle,GlassSegmented,GlassSearch,FilterChips,ProjectConstellation}=NS;
+
+function Card(){return <div style={{display:'grid',gap:14}}>
+  <div style={{display:'flex',gap:14,alignItems:'center',flexWrap:'wrap'}}>
+    {[1,2,3,4].map(l=><GlassSurface key={l} level={l} radius="lg" style={{width:78,height:56,display:'grid',placeItems:'center',font:'var(--fw-medium) 10px/1 var(--font-core)',color:'var(--text-body)'}}>L{l}</GlassSurface>)}
+    <NS.DotRing size={78}><Icon name="plus" size={18} color="var(--text-dim)"/></NS.DotRing><NS.Filament height={56}/><NS.Filament branch width={90} height={56}/><NS.Avatar size={44} src="https://cdn.aquifer.bible/aquifer-content/resources/Media/UBS-0045_bethlehem.jpg"/>
+  </div>
+  <div style={{display:'flex',gap:14,alignItems:'center',flexWrap:'wrap'}}>
+    <GlassButton variant="glass">Assessments</GlassButton><GlassButton variant="dark">Open</GlassButton><GlassButton variant="solid" trailing={<Icon name="chevronRight" size={16}/>}>Here to take the survey?</GlassButton><GlassButton variant="quiet" size="sm">Skip</GlassButton>
+    <GlassIconButton label="Listen" size={44}><Icon name="headphones" size={19}/></GlassIconButton><GlassIconButton label="Languages" size={44} tone="dark"><Icon name="languages" size={19}/></GlassIconButton>
+    <GlassChip leading={<Icon name="book" size={10}/>}>BSB</GlassChip><GlassChip size="sm">CC BY-SA 4.0</GlassChip>
+  </div>
+  <GlassInput placeholder="Anything you want to add? Optional." height={48} style={{maxWidth:420}}/>
+</div>}
+ReactDOM.createRoot(document.getElementById('root')).render(<Card/>);
+</script></body></html>

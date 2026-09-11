@@ -1,0 +1,21 @@
+<!-- @dsCard group="Components" viewport="700x440" name="Constellation" subtitle="ProjectConstellation with world outline and region zoom" -->
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/d3@7.9.0/dist/d3.min.js" integrity="sha384-CjloA8y00+1SDAUkjs099PVfnY2KmDC2BZnws9kh8D/lX1s46w6EPhpXdqMfjK6i" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js" integrity="sha384-Ukv1p/xTma6P4/2bY5KzWBw+ydSpXmhCMtyciIQVDJ1RmOxtCYNMF1uXT9T63H67" crossorigin="anonymous"></script>
+<script src="../../world-outline.js"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>*{box-sizing:border-box}body{margin:0;font-family:var(--font-core);background:var(--aurora-field);-webkit-font-smoothing:antialiased;min-height:100vh;color:var(--text-title)}#root{padding:18px;width:700px}</style>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const NS=window.GenerativeGlassDesignSystem_830e44||Object.values(window).find(v=>v&&v.GlassSurface&&v.ScripturePassage)||{};
+const {GlassSurface,GlassButton,GlassChip,GlassIconButton,GlassInput,Icon,ScripturePassage,KeyTermPopover,SyncBadge,ReviewThread,ProgressGrid,SurveyQuestion,ResourceCard,ResourceStack,CatalogRow,LanguagePicker,GlassTabBar,GlassSheet,DesktopShell,GlassField,GlassSelect,GlassToggle,GlassSegmented,GlassSearch,FilterChips,ProjectConstellation}=NS;
+
+function Card(){const [s,setS]=React.useState('river');const [z,setZ]=React.useState(null);return <ProjectConstellation value={s} onChange={setS} zoom={z} onZoom={setZ}
+  regions={[{name:'South Asia',lon:80,lat:21},{name:'East Africa',lon:37,lat:-2},{name:'Pacific',lon:160,lat:-9},{name:'Americas',lon:-72,lat:-8}]}
+  projects={[{id:'river',title:'River project',region:'South Asia',books:6,stage:'translate',recency:.85,reported:true,dx:-9,dy:-8},{id:'hill',title:'Hill project',region:'South Asia',books:1,stage:'understand',recency:1,dx:7,dy:6},{id:'lake',title:'Lake project',region:'East Africa',books:12,stage:'revise',recency:1,dx:-8,dy:-6},{id:'ridge',title:'Ridge project',region:'East Africa',books:8,stage:'translate',recency:.92,reported:true,dx:8,dy:7},{id:'island',title:'Island project',region:'Pacific',books:2,stage:'understand',recency:1,dx:-7,dy:-6},{id:'forest',title:'Forest project',region:'Americas',books:3,stage:'translate',recency:.8,dx:-8,dy:-7},{id:'canyon',title:'Canyon project',region:'Americas',books:9,stage:'revise',recency:.92,reported:true,dx:7,dy:6}]}/>}
+ReactDOM.createRoot(document.getElementById('root')).render(<Card/>);
+</script></body></html>

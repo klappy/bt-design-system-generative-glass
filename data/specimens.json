@@ -1,0 +1,104 @@
+{
+  "captured": "2026-09-11T14:31:00Z",
+  "sources": {
+    "aquifer": {"mcp": "https://aquifer.klappy.dev/mcp", "version": "1.6.2"},
+    "door43": {"mcp": "https://door43.klappy.dev/mcp", "upstream": "git.door43.org 1.27.2+dcs"}
+  },
+  "passage": {
+    "ref": "Ruth 2:1–4",
+    "usfm": "RUT 2:1-4",
+    "testament": "OT",
+    "genre": "narrative",
+    "versions": [
+      {"resource_code": "BereanStandardBible", "title": "Berean Standard Bible", "lang": "eng", "dir": "ltr", "source": "aquifer:scripture",
+       "verses": [
+         {"n": 1, "t": "Now Naomi had a relative on her husband’s side, a prominent man of noble character from the clan of Elimelech, whose name was Boaz."},
+         {"n": 2, "t": "And Ruth the Moabitess said to Naomi, “Please let me go into the fields and glean heads of grain after someone in whose sight I may find favor.” “Go ahead, my daughter,” Naomi replied."},
+         {"n": 3, "t": "So Ruth departed and went out into the field and gleaned after the harvesters. And she happened to come to the part of the field belonging to Boaz, who was from the clan of Elimelech."},
+         {"n": 4, "t": "Just then Boaz arrived from Bethlehem and said to the harvesters, “The LORD be with you.” “The LORD bless you,” they replied."}
+       ]},
+      {"resource_code": "ArabicVanDyckBible", "title": "الكتاب المقدس، فان دايك", "lang": "arb", "dir": "rtl", "source": "aquifer:scripture",
+       "verses": [
+         {"n": 1, "t": "وَكَانَ لِنُعْمِي ذُو قَرَابَةٍ لِرَجُلِهَا، جَبَّارُ بَأْسٍ مِنْ عَشِيرَةِ أَلِيمَالِكَ، ٱسْمُهُ بُوعَزُ."},
+         {"n": 2, "t": "فَقَالَتْ رَاعُوثُ ٱلْمُوآبِيَّةُ لِنُعْمِي: «دَعِينِي أَذْهَبْ إِلَى ٱلْحَقْلِ وَأَلْتَقِطْ سَنَابِلَ وَرَاءَ مَنْ أَجِدُ نِعْمَةً فِي عَيْنَيْهِ». فَقَالَتْ لَهَا: «ٱذْهَبِي يَابِنْتِي»."}
+       ]},
+      {"resource_code": "IndianRevisedVersion", "title": "Indian Revised Version", "lang": "hin", "dir": "ltr", "source": "aquifer:scripture",
+       "verses": [
+         {"n": 1, "t": "नाओमी के पति एलीमेलेक के कुल में उसका एक बड़ा धनी कुटुम्बी था, जिसका नाम बोअज था।"},
+         {"n": 2, "t": "मोआबिन रूत ने नाओमी से कहा, “मुझे किसी खेत में जाने दे, कि जो मुझ पर अनुग्रह की दृष्टि करे, उसके पीछे-पीछे मैं सिला बीनती जाऊँ।” उसने कहा, “चली जा, बेटी।”"}
+       ]},
+      {"resource_code": "SBLGNT", "title": "SBL Greek New Testament", "lang": "grc", "dir": "ltr", "ref": "Matthew 1:5", "source": "aquifer:scripture",
+       "verses": [
+         {"n": 5, "t": "Σαλμὼν δὲ ἐγέννησεν τὸν Βόες ἐκ τῆς Ῥαχάβ, Βόες δὲ ἐγέννησεν τὸν Ἰωβὴδ ἐκ τῆς Ῥούθ, Ἰωβὴδ δὲ ἐγέννησεν τὸν Ἰεσσαί,"}
+       ]}
+    ],
+    "hebrew": {"status": "not in Aquifer", "note": "No Hebrew Bible resource in the Aquifer list (57 resources, 2026-09-11). Door43 unfoldingWord/hbo_uhb is the candidate source."}
+  },
+  "studyNote": {
+    "source": "aquifer:get", "resource_code": "AquiferOpenStudyNotes", "content_id": "25802", "lang": "eng",
+    "title": "Ruth 2:1", "passage": "RUT 2:1", "version": "1.0.4", "review": "Professional",
+    "text": "Boaz was a relative of Elimelech, so he could be a family redeemer for the widows Ruth and Naomi (see study note on Judges 2:20).",
+    "entities": [{"id": "person:Boaz", "label": "Boaz"}, {"id": "person:Naomi", "label": "Naomi"}, {"id": "person:Elimelech", "label": "Elimelech"}],
+    "links": [{"resource_code": "AquiferOpenStudyNotes", "content_id": "25803", "title": "Ruth 2:20"}]
+  },
+  "dictionary": {
+    "source": "aquifer:get", "resource_code": "AquiferOpenBibleDictionary", "content_id": "8076", "lang": "eng",
+    "title": "Ruth (Person)", "version": "1.0.4",
+    "text": "A Moabitess and the widow of Mahlon, the son of Naomi and Elimelech, who were Ephrathites from Bethlehem. Naomi and Elimelech moved to Moab due to a famine in Judah. After Elimelech and Naomi's two sons died, Naomi returned to Bethlehem with her daughter-in-law Ruth during the barley harvest (Ruth 1:4–22). While gleaning in the barley fields of Boaz, Ruth found favor in his eyes (Ruth 2:2–22). She later married Boaz.",
+    "entities": [{"id": "person:Ruth", "label": "Ruth"}]
+  },
+  "keyTerms": [
+    {"id": "keyterm:Redeem", "label": "Redeem", "source": "aquifer:search", "hits": 641, "ruthNotes": ["AquiferOpenStudyNotes/eng/25812", "AquiferOpenStudyNotes/eng/25830", "AquiferOpenStudyNotes/eng/25832"]},
+    {"id": "keyterm:Favor", "label": "Favor", "source": "aquifer:get OT072 entities"},
+    {"id": "keyterm:Kindness", "label": "Kindness", "source": "aquifer:get OT072 entities"}
+  ],
+  "media": [
+    {"source": "aquifer:get", "resource_code": "FIAImages", "content_id": "a1888", "type": "photo", "title": "barley field", "url": "https://s3.amazonaws.com/cbbt-er.public/media/photos/a1888/1000.jpg", "usedIn": "Glass refraction card"},
+    {"source": "aquifer:get", "resource_code": "FIAImages", "content_id": "a1889", "type": "photo", "title": "barley field", "url": "https://s3.amazonaws.com/cbbt-er.public/media/photos/a1889/1000.jpg", "usedIn": "SpotHero"},
+    {"source": "aquifer:get", "resource_code": "FIAImages", "content_id": "a269", "type": "photo", "title": "barley", "url": "https://s3.amazonaws.com/cbbt-er.public/media/photos/a269/1000.jpg", "usedIn": "Blur ladder"},
+    {"source": "aquifer:get", "resource_code": "FIAImages", "content_id": "a827", "type": "photo", "title": "Almond Flowers", "passage": "EXO 25:31–40", "url": "https://s3.amazonaws.com/cbbt-er.public/media/photos/a827/1000.jpg", "usedIn": "DestinationCard, constellation orb"},
+    {"source": "aquifer:get", "resource_code": "FIAImages", "content_id": "a54", "type": "photo", "title": "Alabaster Jar", "passage": "MRK 14:1–11", "url": "https://s3.amazonaws.com/cbbt-er.public/media/photos/a54/1000.jpg", "usedIn": "Image stack"},
+    {"source": "aquifer:get", "resource_code": "FIAMaps", "content_id": "c94", "type": "map", "title": "Bethlehem to Jerusalem", "passage": "LUK 2:22–40", "url": "https://s3.amazonaws.com/cbbt-er.public/media/maps/eng/c94/v1/original.png", "usedIn": "CategoryTile"},
+    {"source": "aquifer:get", "resource_code": "FIAMaps", "content_id": "c128", "type": "map", "title": "Judea and Dead Sea", "passage": "LUK 21:20–28", "url": "https://s3.amazonaws.com/cbbt-er.public/media/maps/eng/c128/v1/original.png", "usedIn": "CategoryTile"},
+    {"source": "aquifer:get", "resource_code": "BiblicaOpenBibleMaps", "content_id": "OT072", "lang": "eng", "type": "map",
+     "title": "Historical: Ruth", "passage": "RUT 1:1–4:22", "version": "1.0.2",
+     "url": "https://raw.githubusercontent.com/BibleAquifer/BiblicaOpenBibleMaps/main/eng/json/images/OT072.png",
+     "license": {"name": "CC BY-SA 4.0", "holder": "Biblica, Inc.", "dates": "2023–2025", "url": "https://creativecommons.org/licenses/by-sa/4.0/"}},
+    {"source": "aquifer:get", "resource_code": "UBSImages", "content_id": "831521", "lang": "eng", "type": "photo",
+     "title": "Bethlehem", "passage": "RUT 2:4 and 42 others", "version": "1.0.4",
+     "url": "https://cdn.aquifer.bible/aquifer-content/resources/Media/UBS-0045_bethlehem.jpg",
+     "license": {"name": "see resource metadata", "holder": "United Bible Societies", "url": null}},
+    {"source": "aquifer:browse", "resource_code": "FIAMaps", "content_id": "c201", "lang": "eng", "type": "map",
+     "title": "Aerial View of Judea and Jerusalem", "passage": "MRK 1:1–13",
+     "url": "https://s3.amazonaws.com/cbbt-er.public/media/maps/eng/c201/v1/original.png",
+     "license": {"name": "see resource metadata", "holder": "FIA / cbbt-er", "url": null}},
+    {"source": "aquifer:browse", "resource_code": "FIAMaps", "content_id": "c37", "lang": "eng", "type": "map",
+     "title": "Abram's Journey from Ur to Canaan", "passage": "GEN 11:27–32, 23:1–20",
+     "url": "https://s3.amazonaws.com/cbbt-er.public/media/maps/eng/c37/v1/original.png",
+     "license": {"name": "see resource metadata", "holder": "FIA / cbbt-er", "url": null}}
+  ],
+  "aquiferResources": [
+    {"code": "AquiferOpenStudyNotes", "title": "Aquifer Open Study Notes", "type": "Study Notes", "articles": 16923, "lang": "eng", "localizations": 10},
+    {"code": "AquiferOpenBibleDictionary", "title": "Aquifer Open Bible Dictionary", "type": "Bible Dictionary", "articles": 6120, "lang": "eng", "localizations": 14},
+    {"code": "FIATranslationGuide", "title": "FIA Translation Guide", "type": "Translation Guide", "articles": 1465, "lang": "eng", "localizations": 15},
+    {"code": "FIAMaps", "title": "FIA Maps", "type": "Images, Maps, Videos", "articles": 227, "lang": "eng", "localizations": 0},
+    {"code": "FIAKeyTerms", "title": "FIA Key Terms", "type": "Translation Glossary", "articles": 512, "lang": "eng", "localizations": 6},
+    {"code": "UWTranslationNotes", "title": "unfoldingWord® Translation Notes", "type": "Translation Guide", "articles": 85148, "lang": "eng", "localizations": 8},
+    {"code": "UBSImages", "title": "UBS Images", "type": "Images, Maps, Videos", "articles": 1054, "lang": "eng", "localizations": 17},
+    {"code": "SBLGNT", "title": "SBL Greek New Testament", "type": "Bible", "articles": 27, "lang": "grc", "localizations": 0}
+  ],
+  "door43Catalog": [
+    {"full_name": "unfoldingWord/en_ult", "title": "unfoldingWord® Literal Text", "subject": "Aligned Bible", "lang": "en", "dir": "ltr", "release": "v90", "released": "2026-08-17"},
+    {"full_name": "unfoldingWord/en_ust", "title": "unfoldingWord® Simplified Text", "subject": "Aligned Bible", "lang": "en", "dir": "ltr", "release": "v90", "released": "2026-08-17"},
+    {"full_name": "unfoldingWord/en_tn", "title": "unfoldingWord® Translation Notes", "subject": "TSV Translation Notes", "lang": "en", "dir": "ltr", "release": "v90", "released": "2026-08-17"},
+    {"full_name": "unfoldingWord/en_tw", "title": "unfoldingWord® Translation Words", "subject": "Translation Words", "lang": "en", "dir": "ltr", "release": "v90", "released": "2026-08-14"},
+    {"full_name": "unfoldingWord/en_ta", "title": "unfoldingWord® Translation Academy", "subject": "Translation Academy", "lang": "en", "dir": "ltr", "release": "v90", "released": "2026-08-14"},
+    {"full_name": "unfoldingWord/en_obs", "title": "unfoldingWord® Open Bible Stories", "subject": "Open Bible Stories", "lang": "en", "dir": "ltr", "release": "v9", "released": "2023-03-03"},
+    {"full_name": "BSOJ/ar_avd", "title": "الكتاب المقدس باللغة العربية، فان دايك", "subject": "Aligned Bible", "lang": "ar", "dir": "rtl", "release": "v6.9"},
+    {"full_name": "BSOJ/ar_tw", "title": "كلمات الترجمة unfoldingWord®", "subject": "Translation Words", "lang": "ar", "dir": "rtl", "release": "v5"},
+    {"full_name": "translationCore-Create-BCS/hi_glt", "title": "हिन्दी भाषा शाब्दिक पाठ", "subject": "Aligned Bible", "lang": "hi", "dir": "ltr", "release": "v8"},
+    {"full_name": "translationCore-Create-BCS/hi_tw", "title": "बाइबल अनुवाद के मुख्य शब्द", "subject": "Translation Words", "lang": "hi", "dir": "ltr", "release": "v8"},
+    {"full_name": "es-419_gl/es-419_glt", "title": "Texto Puente Literal", "subject": "Aligned Bible", "lang": "es-419", "dir": "ltr", "release": "v42"},
+    {"full_name": "Door43-Catalog/sw_tn", "title": "translationNotes", "subject": "Translation Notes", "lang": "sw", "dir": "ltr", "release": "v7.2"}
+  ]
+}

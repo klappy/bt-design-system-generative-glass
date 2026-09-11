@@ -1,0 +1,12 @@
+:root{
+  --r-key:6px;        /* keyboard keys */
+  --r-xs:10px;
+  --r-sm:14px;        /* small tiles */
+  --r-md:18px;        /* category cards */
+  --r-lg:22px;        /* card image wells */
+  --r-xl:28px;        /* primary glass cards */
+  --r-2xl:34px;       /* expanded sheets */
+  --r-pill:999px;     /* inputs, chips, buttons, FABs */
+  --r-screen:46px;    /* device screen */
+  --r-device:54px;
+}

@@ -1,0 +1,42 @@
+:root{
+  /* Fill ladder — 1 is barely there, 4 is an opaque-feeling sheet */
+  --glass-fill-1:rgba(255,255,255,.28);
+  --glass-fill-2:rgba(255,255,255,.46);
+  --glass-fill-3:rgba(255,255,255,.62);
+  --glass-fill-4:rgba(255,255,255,.78);
+  --glass-fill-tint:rgba(243,246,252,.55);
+  --glass-fill-night:rgba(22,24,28,.62);
+  --glass-fill-night-strong:rgba(16,18,21,.82);
+
+  /* Blur ladder */
+  --blur-sheer:8px; --blur-soft:16px; --blur-medium:24px; --blur-strong:40px; --blur-heavy:64px;
+  --sat-glass:saturate(160%); /* @kind other */
+
+  /* Hairline borders — always light, always sub-pixel-thin */
+  --border-glass:.5px solid rgba(255,255,255,.7); /* @kind other */
+  --border-glass-soft:.5px solid rgba(255,255,255,.45); /* @kind other */
+  --border-hairline:.5px solid rgba(20,28,45,.06); /* @kind other */
+  --border-night:.5px solid rgba(255,255,255,.10); /* @kind other */
+
+  /* Composed materials */
+  --material-card:var(--glass-fill-2); /* @kind other */
+  --material-raised:var(--glass-fill-3); /* @kind other */
+  --material-chip:var(--glass-fill-3); /* @kind other */
+  --material-night:var(--glass-fill-night); /* @kind other */
+  /* Floating layers (popover, sheet, menu, picker) back their glass onto the solid surface so text
+     underneath never reads through. In-flow cards stay pure translucent. Rule from 2026-09-11. */
+  --material-floating:linear-gradient(rgba(255,255,255,.78),rgba(255,255,255,.78)),#FFFFFF; /* @kind other */
+  --material-scripture:var(--glass-fill-3); /* @kind other */
+
+  /* Edge refraction: a faint prismatic sheen on the top-left of large surfaces */
+  --refraction:linear-gradient(135deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 38%,rgba(255,255,255,0) 62%,rgba(255,255,255,.22) 100%); /* @kind other */
+  /* The ambient aurora field behind everything */
+  --aurora-field:
+    radial-gradient(52% 34% at 22% 30%,rgba(188,214,244,.85) 0%,rgba(188,214,244,0) 70%),
+    radial-gradient(46% 30% at 78% 24%,rgba(251,216,189,.80) 0%,rgba(251,216,189,0) 72%),
+    radial-gradient(58% 38% at 62% 62%,rgba(201,195,240,.85) 0%,rgba(201,195,240,0) 72%),
+    radial-gradient(42% 28% at 30% 78%,rgba(246,239,198,.70) 0%,rgba(246,239,198,0) 74%),
+    radial-gradient(50% 36% at 88% 82%,rgba(242,207,219,.65) 0%,rgba(242,207,219,0) 74%),
+    linear-gradient(180deg,#F4F6FA 0%,#E7EBF3 100%); /* @kind other */
+  --studio-bg:radial-gradient(70% 55% at 50% 22%,#EFF1F6 0%,#E2E6EE 55%,#D7DCE7 100%); /* @kind other */
+}

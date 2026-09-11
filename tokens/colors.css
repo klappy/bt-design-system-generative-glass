@@ -1,0 +1,24 @@
+:root{
+  /* Ink — text on light glass */
+  --ink-900:#0E1420; --ink-700:#242C3A; --ink-500:#5A6472; --ink-400:#7C8595; --ink-300:#9AA2B0; --ink-200:#B8BEC9;
+  /* Light neutrals — the studio environment behind the glass */
+  --paper-000:#FFFFFF; --paper-050:#F7F8FB; --paper-100:#EEF0F5; --paper-200:#E3E6ED; --paper-300:#D6DAE4; --paper-400:#C3C9D6;
+  /* Aurora — the out-of-focus pastel blobs that bleed through frosted surfaces */
+  --aurora-lavender:#C9C3F0; --aurora-peach:#FBD8BD; --aurora-sky:#BCD6F4; --aurora-lemon:#F6EFC6; --aurora-blush:#F2CFDB; --aurora-mint:#CCEBE2;
+  /* Accents — used sparingly, only for identity chips and live state */
+  --accent-blue:#1F4FE0; --accent-blue-soft:#5C86F2; --accent-red:#D0202E; --accent-teal:#3FB6A8;
+  /* Dark — spot detail + map surfaces */
+  --night-000:#000000; --night-900:#0B0D10; --night-800:#14161A; --night-700:#1D2025; --night-600:#2A2E35;
+  --night-map:#08110F; --night-map-glow:#0F2A24;
+  --on-night-900:#FFFFFF; --on-night-500:#A7ADB6; --on-night-400:#7E858F;
+
+  /* Semantic aliases */
+  --text-title:var(--ink-900); --text-body:var(--ink-700); --text-muted:var(--ink-500); --text-dim:var(--ink-400); --text-faint:var(--ink-300);
+  --text-on-image:var(--paper-000); --text-on-night:var(--on-night-900); --text-on-night-muted:var(--on-night-500);
+  --surface-app:var(--paper-100); --surface-card:var(--glass-fill-2); --surface-raised:var(--glass-fill-3);
+  --surface-night:var(--night-800); --surface-night-deep:var(--night-900);
+  --surface-solid:var(--paper-000); --surface-inverse:var(--ink-900); --text-on-inverse:var(--paper-000);
+  --device-frame:linear-gradient(150deg,#F2F4F8 0%,#C9D0DC 22%,#EDF0F5 48%,#B9C2D2 78%,#E8EBF1 100%); /* @kind other */
+  --link:var(--accent-blue); --link-hover:var(--accent-blue-soft);
+  --focus-ring:rgba(31,79,224,.35);
+}

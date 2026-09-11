@@ -1,0 +1,64 @@
+/* Dark theme — the night material from the map / spot screens, extended to the
+   whole system. Scope it by putting data-theme="dark" on <html> or any subtree:
+   every semantic alias below is re-pointed, so components written against the
+   light theme go dark without touching their markup.
+   Base palette tokens (--ink-*, --paper-*, --night-*) are never redefined. */
+[data-theme="dark"]{
+  /* Text */
+  --text-title:#FFFFFF; --text-body:#E7EAEF; --text-muted:var(--on-night-500); --text-dim:var(--on-night-400); --text-faint:#666D77;
+  --text-on-image:#FFFFFF; --text-on-night:#FFFFFF; --text-on-night-muted:var(--on-night-500);
+
+  /* Surfaces */
+  --surface-app:var(--night-900); --surface-card:var(--glass-fill-2); --surface-raised:var(--glass-fill-3);
+  --surface-night:var(--night-800); --surface-night-deep:var(--night-900);
+  --surface-solid:#1B1E23; --surface-inverse:#FFFFFF; --text-on-inverse:var(--ink-900);
+
+  /* Glass — still glass, not paint. The ladder stays WHITE and translucent so the
+     dark aurora keeps bleeding through; only the alphas drop. A dark opaque fill
+     would kill the material, so the steps climb .05 → .20, never past a quarter. */
+  --glass-fill-1:rgba(255,255,255,.05);
+  --glass-fill-2:rgba(255,255,255,.09);
+  --glass-fill-3:rgba(255,255,255,.14);
+  --glass-fill-4:rgba(255,255,255,.20);
+  --glass-fill-tint:rgba(190,215,255,.07);
+  --glass-fill-night:rgba(255,255,255,.09);
+  --glass-fill-night-strong:rgba(255,255,255,.15);
+  --material-card:var(--glass-fill-2); --material-raised:var(--glass-fill-3); --material-chip:var(--glass-fill-3);
+  /* Re-declared here because var() inside a custom property resolves where it is declared, not where it is used */
+  --material-floating:linear-gradient(rgba(255,255,255,.20),rgba(255,255,255,.20)),#1B1E23; /* @kind other */
+
+  /* Edges — white hairlines drop to a whisper; there is no dark border anywhere */
+  --border-glass:.5px solid rgba(255,255,255,.28); /* @kind other */
+  --border-glass-soft:.5px solid rgba(255,255,255,.16); /* @kind other */
+  --border-hairline:.5px solid rgba(255,255,255,.10); /* @kind other */
+  --border-night:.5px solid rgba(255,255,255,.22); /* @kind other */
+  --inner-top:inset 0 1px 0 rgba(255,255,255,.26); /* @kind other */
+  --inner-edge:inset 0 0 0 .5px rgba(255,255,255,.14); /* @kind other */
+  --inner-bottom:inset 0 -1px 0 rgba(255,255,255,.10); /* @kind other */
+  /* The prismatic sheen stays legible — on dark it is most of what reads as glass */
+  --refraction:linear-gradient(135deg,rgba(255,255,255,.20) 0%,rgba(255,255,255,0) 38%,rgba(255,255,255,0) 62%,rgba(255,255,255,.10) 100%); /* @kind other */
+
+  /* Depth — same three-layer construction, black instead of navy */
+  --shadow-rest:0 1px 2px rgba(0,0,0,.34), 0 6px 18px rgba(0,0,0,.30);
+  --shadow-card:0 2px 6px rgba(0,0,0,.36), 0 14px 34px rgba(0,0,0,.40), 0 40px 80px rgba(0,0,0,.32);
+  --shadow-float:0 4px 10px rgba(0,0,0,.40), 0 22px 50px rgba(0,0,0,.44), 0 60px 120px rgba(0,0,0,.36);
+  --glow-focus:0 0 0 1px rgba(255,255,255,.22), 0 0 24px rgba(63,182,168,.30);
+  --glow-active:0 0 30px rgba(63,182,168,.30);
+
+  /* Accents — the blue lifts so it survives on near-black; red and teal hold */
+  --accent-blue:#5C86F2; --accent-blue-soft:#8FAAF7;
+  --device-frame:linear-gradient(150deg,#4A4F58 0%,#20242A 22%,#575D66 48%,#191C21 78%,#3E434B 100%); /* @kind other */
+  --link:var(--accent-blue); --link-hover:var(--accent-blue-soft);
+  --focus-ring:rgba(92,134,242,.40);
+
+  /* The aurora goes subterranean: the same six blobs at jewel saturation over map
+     black. It has to stay bright enough to read THROUGH the glass above it. */
+  --aurora-field:
+    radial-gradient(52% 34% at 22% 30%,rgba(102,138,152,.55) 0%,rgba(102,138,152,0) 70%),
+    radial-gradient(46% 30% at 78% 24%,rgba(92,134,242,.46) 0%,rgba(92,134,242,0) 72%),
+    radial-gradient(58% 38% at 62% 62%,rgba(140,110,215,.52) 0%,rgba(140,110,215,0) 72%),
+    radial-gradient(42% 28% at 30% 78%,rgba(226,70,84,.28) 0%,rgba(226,70,84,0) 74%),
+    radial-gradient(50% 36% at 88% 82%,rgba(102,138,152,.32) 0%,rgba(102,138,152,0) 74%),
+    linear-gradient(180deg,#0B0D10 0%,#0A1114 100%); /* @kind other */
+  --studio-bg:radial-gradient(70% 55% at 50% 22%,#15181D 0%,#0D1013 55%,#08090B 100%);
+}

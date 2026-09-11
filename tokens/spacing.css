@@ -1,0 +1,11 @@
+:root{
+  --sp-1:2px; --sp-2:4px; --sp-3:6px; --sp-4:8px; --sp-5:10px; --sp-6:12px;
+  --sp-7:14px; --sp-8:16px; --sp-9:20px; --sp-10:24px; --sp-11:28px; --sp-12:32px;
+  --sp-13:40px; --sp-14:48px; --sp-15:64px;
+  --gutter-screen:18px;      /* left/right screen inset */
+  --gutter-card:18px;        /* card internal padding */
+  --gap-stack:10px;          /* vertical gap between stacked glass surfaces */
+  --gap-inline:8px;          /* gap between pills / chips */
+  --safe-top:52px; --safe-bottom:24px;
+  --device-w:390px; --device-h:844px;
+}

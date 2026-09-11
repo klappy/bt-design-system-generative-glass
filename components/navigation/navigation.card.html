@@ -1,0 +1,26 @@
+<!-- @dsCard group="Components" viewport="700x520" name="Navigation" subtitle="GlassTabBar, GlassSheet, DesktopShell" -->
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>*{box-sizing:border-box}body{margin:0;font-family:var(--font-core);background:var(--aurora-field);-webkit-font-smoothing:antialiased;min-height:100vh;color:var(--text-title)}#root{padding:18px;width:700px}</style>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const NS=window.GenerativeGlassDesignSystem_830e44||Object.values(window).find(v=>v&&v.GlassSurface&&v.ScripturePassage)||{};
+const {GlassSurface,GlassButton,GlassChip,GlassIconButton,GlassInput,Icon,ScripturePassage,KeyTermPopover,SyncBadge,ReviewThread,ProgressGrid,SurveyQuestion,ResourceCard,ResourceStack,CatalogRow,LanguagePicker,GlassTabBar,GlassSheet,DesktopShell,GlassField,GlassSelect,GlassToggle,GlassSegmented,GlassSearch,FilterChips,ProjectConstellation}=NS;
+
+function Card(){const [t,setT]=React.useState('passages');const [ph,setPh]=React.useState('Understand');const [o,setO]=React.useState(true);return <div style={{display:'grid',gap:12}}>
+  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+    <div style={{padding:'38px 18px 18px',borderRadius:'var(--r-lg)',background:'var(--glass-fill-1)',display:'grid',placeItems:'end center'}}><GlassTabBar value={t} onChange={setT} items={[{id:'home',label:'Home',icon:'compass'},{id:'passages',label:'Passages',icon:'bookmark'},{id:'review',label:'Review',icon:'sparkle'},{id:'search',label:'Search',icon:'search'}]}/></div>
+    <div style={{height:200,borderRadius:'var(--r-lg)',background:'var(--glass-fill-1)',overflow:'hidden'}} onClick={()=>setO(!o)}><GlassSheet open={o} title="Invite a collaborator" description="Collaborators can open the workspace. Survey participants only need the survey link." behind={<div><div style={{font:'var(--type-caption)',color:'var(--text-muted)'}}>River project</div><div style={{font:'var(--type-card-title)'}}>River assessment</div></div>} actions={<><GlassButton variant="dark" size="sm" full>Copy invite link</GlassButton><GlassButton size="sm" full>Open workspace access</GlassButton></>}/></div>
+  </div>
+  <DesktopShell crumb="River project" title="River assessment" phases={['Prepare','Collect','Understand','Improve']} phase={ph} onPhase={setPh} style={{minHeight:260}}
+    action={<div style={{display:'flex',alignItems:'center',gap:8,height:36,padding:'0 12px',borderRadius:'var(--r-pill)',background:'var(--glass-fill-2)',border:'var(--border-glass)',boxShadow:'var(--inner-top)',font:'var(--type-caption)',color:'var(--text-muted)'}}><Icon name="plus" size={14}/>New assessment</div>}
+    groups={[{label:'River project',items:[{label:'River assessment',meta:'Prepare',active:true},{label:'Earlier assessment',meta:'Understand'}]},{label:'Hill project',empty:'No assessments yet'}]}>
+    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(150px,1fr))',gap:12}}>{['Responses','Quality band · simple','Reflection'].map(k=><GlassSurface key={k} level={2} radius="lg" style={{padding:16}}><div style={{font:'var(--type-overline)',letterSpacing:'var(--ls-overline)',textTransform:'uppercase',color:'var(--text-muted)'}}>{k}</div></GlassSurface>)}</div>
+  </DesktopShell>
+</div>}
+ReactDOM.createRoot(document.getElementById('root')).render(<Card/>);
+</script></body></html>

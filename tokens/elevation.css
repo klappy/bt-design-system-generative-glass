@@ -1,0 +1,13 @@
+:root{
+  /* Multi-layered, high-diffusion, near-neutral shadows. Never a single hard drop. */
+  --shadow-rest:0 1px 2px rgba(20,28,45,.04), 0 6px 18px rgba(20,28,45,.05);
+  --shadow-card:0 2px 6px rgba(20,28,45,.05), 0 14px 34px rgba(20,28,45,.08), 0 40px 80px rgba(20,28,45,.06);
+  --shadow-float:0 4px 10px rgba(20,28,45,.06), 0 22px 50px rgba(20,28,45,.10), 0 60px 120px rgba(20,28,45,.08);
+  --shadow-night:0 8px 24px rgba(0,0,0,.45), 0 30px 70px rgba(0,0,0,.35);
+  --glow-focus:0 0 0 1px rgba(255,255,255,.7), 0 0 24px rgba(188,214,244,.55);
+  --glow-active:0 0 30px rgba(201,195,240,.45);
+  /* Inner light: the specular top edge every glass surface carries */
+  --inner-top:inset 0 1px 0 rgba(255,255,255,.75); /* @kind shadow */
+  --inner-edge:inset 0 0 0 .5px rgba(255,255,255,.55); /* @kind shadow */
+  --inner-bottom:inset 0 -1px 0 rgba(255,255,255,.28); /* @kind shadow */
+}
