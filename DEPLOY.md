@@ -2,7 +2,7 @@
 
 This repo is served as static assets by the Cloudflare Worker **bible-glass** at **https://bible-glass.klappy.dev**. There is no Worker script and no build step; `wrangler.jsonc` points `assets.directory` at the repo root and `.assetsignore` trims what is uploaded.
 
-**No seat deploys.** Cloudflare Workers Builds is connected to this repository (wired by API, kitchen HYGIENE 10a/12a, mcp-server-build-convention §10):
+**No seat deploys.** Cloudflare Workers Builds is connected to this repository (wired by API on 2026-09-11, kitchen HYGIENE 10a/12a, mcp-server-build-convention §10; script tag `23393ac8124344bb90a067853a17ba7a`, triggers `713a90d1…` main / `49acdcd9…` branches):
 
 - **main** → `npx wrangler deploy` → production at bible-glass.klappy.dev
 - **any other branch** → `npx wrangler versions upload` → preview at `<branch-slug>-bible-glass.klappy.workers.dev`; production untouched
