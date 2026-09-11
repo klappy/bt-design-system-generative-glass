@@ -9,7 +9,6 @@ This is the **core**. It holds what all three apps share and no more. Each app o
 - **Bible Aquifer MCP** — `https://aquifer.klappy.dev/mcp` (klappy/aquifer-mcp). 57 open-licence resources: Bibles in 15+ languages, Aquifer Open Study Notes, Open Bible Dictionary, FIA guide/maps/images/key terms, unfoldingWord Translation Notes/Words/Questions, UBS images and lexica, Biblica maps. Every specimen in this system was fetched live on 2026-09-11 and is traceable by `resource_code/language/content_id` in `data/specimens.json`.
 - **Door43 MCP** — `https://door43.klappy.dev/mcp` (klappy/door43-mcp), reading the DCS catalog at git.door43.org. Catalog rows (owner/repo, subject, release, language direction) come from `GET /catalog/search?stage=prod`.
 - **klappy/3d-review-cookbook** (private) — the 3D Review domain: Prepare/Collect/Understand/Improve, four perspectives (Translator, Community, Church, Consultant), decisions DEC-0001 bands over scores, DEC-0003 jar-fill, DEC-0004 dual report levels.
-- **klappy/aquifer-study-bible-cookbook** — open study-notes system; carries a retired travel-era copy of this system under `design-system/` (to be replaced by a pointer).
 - **Captain decision forms, 2026-09-11** — LanguagePicker behaviour (contexts, coverage states, ranking), recorded in the kitchen journal.
 - **Lineage** — reconstructed from a 30-frame liquid-glass motion piece (travel concept, 2026-09-04), then re-aimed at Bible Translation on 2026-09-10. Values measured at 390pt are close, not exact.
 
