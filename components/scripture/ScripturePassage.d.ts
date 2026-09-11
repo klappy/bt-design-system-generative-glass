@@ -1,7 +1,6 @@
 /**
  * A quoted passage on fill-3 glass: reference, version chip, verse numbers in overline ink,
  * one reading face per script, RTL on the passage block only, key-term chips with popovers.
- * @startingPoint section="Scripture" subtitle="Passage with version, source and key terms" viewport="600x360"
  */
 export interface ScripturePassageProps{
   /** Human reference, e.g. "Ruth 2:1–4". */

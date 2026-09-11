@@ -6,9 +6,11 @@ This is the **core**. It holds what all three apps share and no more. Each app o
 
 ## Sources
 
+- **This repository** — `https://github.com/klappy/bt-design-system-generative-glass` (main). The design system is authored there; this project mirrors it and adds `ui_kits/`. Explore the repo for history, decisions and the latest cards.
 - **Bible Aquifer MCP** — `https://aquifer.klappy.dev/mcp` (klappy/aquifer-mcp). 57 open-licence resources: Bibles in 15+ languages, Aquifer Open Study Notes, Open Bible Dictionary, FIA guide/maps/images/key terms, unfoldingWord Translation Notes/Words/Questions, UBS images and lexica, Biblica maps. Every specimen in this system was fetched live on 2026-09-11 and is traceable by `resource_code/language/content_id` in `data/specimens.json`.
 - **Door43 MCP** — `https://door43.klappy.dev/mcp` (klappy/door43-mcp), reading the DCS catalog at git.door43.org. Catalog rows (owner/repo, subject, release, language direction) come from `GET /catalog/search?stage=prod`.
 - **klappy/3d-review-cookbook** (private) — the 3D Review domain: Prepare/Collect/Understand/Improve, four perspectives (Translator, Community, Church, Consultant), decisions DEC-0001 bands over scores, DEC-0003 jar-fill, DEC-0004 dual report levels.
+- **klappy/aquifer-study-bible-cookbook** — open study-notes system; carries a retired travel-era copy of this system under `design-system/` (to be replaced by a pointer).
 - **Captain decision forms, 2026-09-11** — LanguagePicker behaviour (contexts, coverage states, ranking), recorded in the kitchen journal.
 - **Lineage** — reconstructed from a 30-frame liquid-glass motion piece (travel concept, 2026-09-04), then re-aimed at Bible Translation on 2026-09-10. Values measured at 390pt are close, not exact.
 
@@ -108,11 +110,12 @@ Stroke-only, 1.7px, round caps and joins, 24px grid, monochrome. **Lucide** (MIT
 | `components/navigation/` | GlassTabBar, GlassSheet, DesktopShell |
 | `components/forms/` | GlassField, GlassSelect, GlassToggle, GlassSegmented, GlassSearch, FilterChips |
 | `components/constellation/` | ProjectConstellation (+ `world-outline.js`) |
-| `ui_kits/` | Dish 3: 3d-review, fia, aquifer-window |
+| `ui_kits/` | 3d-review (coordinator desktop + participant phone), fia (phone companion), aquifer-window (resource browser). Each has `index.html`, `app.jsx`, `README.md`; `ui_kits/shared/kit-base.js` holds the specimen data and boots from `_ds_bundle.js` (falling back to `components-loader.js`) |
+| `templates/` | Design Component templates consuming projects can start from: three-d-review, fia, aquifer-window (each mounts its `ui_kits/` app; `templates/shared/kit-loader.js`) |
 | `SKILL.md` | Agent-Skills entry point |
 
 ### Components
-Each has a sibling `.d.ts` (props contract) and `.prompt.md` (what & when, usage). Starting points: ScripturePassage, SurveyQuestion, LanguagePicker.
+Each has a sibling `.d.ts` (props contract) and `.prompt.md` (what & when, usage). Templates (under `templates/`) replace the earlier starting-point tags.
 
 **Intentional additions.** `Icon` (glyph wrapper) and `AuroraField` (the backdrop as a material) carry over from the first system. `SyncBadge` and `KeyTermPopover` were split out of ScripturePassage because ResourceCard and the Aquifer Window reuse them.
 
