@@ -12,6 +12,11 @@ This repo is served as static assets by the Cloudflare Worker **bible-glass** at
 ## What is committed that a compiler produces
 `_ds_bundle.js` and `_ds_manifest.json` are compiled by the Claude design design-system project from `components/**/*.jsx` and committed here so the kits and consumers load them from one URL. Regenerate by syncing that project and pushing; never hand-edit.
 
+## Pages
+- `/` — the docs (`index.html`, a Design Component; `support.js` is its runtime)
+- `/cards.html` — flat index of every card and kit
+- `/version.json`, `/CONTRACT.md`, `/APPS.md`
+
 ## Consume
 ```html
 <link rel="stylesheet" href="https://bible-glass.klappy.dev/styles.css">
