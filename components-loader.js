@@ -3,6 +3,8 @@
 // window.GenerativeGlass, then fires 'gg-components-ready'. Dev/prototyping path only; a compiled
 // bundle replaces this when the project is flagged as a design system.
 (function(){
+  // Compiled bundle already owns the namespace; do not poll for Babel or refetch JSX.
+  if(window.GenerativeGlassDesignSystem_1a4c8e)return;
   const FILES=['glass/GlassSurface','glass/GlassButton','glass/GlassChip','glass/GlassIconButton','glass/GlassInput','glass/DotRing','glass/Filament','glass/Avatar','glass/AuroraField','glass/StatusBar','icons/Icon','scripture/SyncBadge','scripture/KeyTermPopover','scripture/ScripturePassage','review/ReviewThread','progress/ProgressGrid','survey/SurveyQuestion','resources/ResourceCard','resources/ResourceStack','resources/CatalogRow','language/LanguagePicker','navigation/GlassTabBar','navigation/GlassSheet','navigation/DesktopShell','forms/GlassField','forms/GlassSelect','forms/GlassToggle','forms/GlassSegmented','forms/GlassSearch','forms/FilterChips','constellation/ProjectConstellation'];
   const base=(document.currentScript&&document.currentScript.src||'').replace(/[^/]*$/,'');
   const NS=window.GenerativeGlass=window.GenerativeGlass||{};
