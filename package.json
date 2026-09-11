@@ -1,0 +1,8 @@
+{
+  "name": "bible-glass",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Generative Glass design system for Bible Translation apps, served as static assets at bible-glass.klappy.dev",
+  "scripts": { "dev": "wrangler dev" },
+  "devDependencies": { "wrangler": "^4.99.0" }
+}
