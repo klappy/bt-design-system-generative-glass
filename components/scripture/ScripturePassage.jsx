@@ -6,7 +6,7 @@ const FACE={latin:'var(--font-scripture-latin)',hebrew:'var(--font-scripture-heb
 export function ScripturePassage({reference,version,source,script='latin',dir='ltr',lang,verses=[],keyTerms=[],sync,style,...rest}){
   const [open,setOpen]=React.useState(null);
   const t=open!=null?keyTerms[open]:null;
-  return React.createElement('div',{style:{position:'relative',width:'100%',borderRadius:'var(--r-xl)',background:'var(--material-scripture)',
+  return React.createElement('div',{style:{boxSizing:'border-box',position:'relative',width:'100%',borderRadius:'var(--r-xl)',background:'var(--material-scripture)',
     backdropFilter:'blur(var(--blur-strong)) var(--sat-glass)',WebkitBackdropFilter:'blur(var(--blur-strong)) var(--sat-glass)',
     border:'var(--border-glass)',boxShadow:'var(--shadow-card), var(--inner-top), var(--inner-edge)',padding:'18px 22px 22px',...style},...rest},
     React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',gap:10,flexWrap:'wrap'}},

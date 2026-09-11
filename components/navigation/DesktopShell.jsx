@@ -6,7 +6,7 @@ export function DesktopShell({appName='3D Review',action,groups=[],phases=[],pha
       action,
       React.createElement('nav',{style:{display:'grid',gap:2}},groups.map((g,i)=>React.createElement(React.Fragment,{key:i},
         React.createElement('div',{style:{font:'var(--type-overline)',letterSpacing:'var(--ls-overline)',textTransform:'uppercase',color:'var(--text-dim)',padding:i?'10px 8px 4px':'6px 8px 4px'}},g.label),
-        (g.items&&g.items.length?g.items:[{label:g.empty||'Nothing yet',muted:true}]).map((it,j)=>React.createElement('button',{key:j,onClick:it.onSelect,style:{display:'flex',justifyContent:'space-between',gap:6,width:'100%',padding:'7px 8px',borderRadius:'var(--r-xs)',border:'none',textAlign:'start',cursor:it.onSelect?'pointer':'default',
+        (g.items&&g.items.length?g.items:[{label:g.empty||'Nothing yet',muted:true}]).map((it,j)=>React.createElement('button',{key:j,onClick:it.onSelect,style:{boxSizing:'border-box',display:'flex',justifyContent:'space-between',gap:6,width:'100%',padding:'7px 8px',borderRadius:'var(--r-xs)',border:'none',textAlign:'start',cursor:it.onSelect?'pointer':'default',
           background:it.active?'var(--glass-fill-3)':'transparent',font:'var(--type-caption)',color:it.muted?'var(--text-muted)':it.active?'var(--text-title)':'var(--text-body)'}},
           React.createElement('span',null,it.label),it.meta?React.createElement('span',{style:{color:'var(--text-dim)'}},it.meta):null)))))),
     React.createElement('main',{style:{padding:24,display:'flex',flexDirection:'column',gap:14,minWidth:0}},

@@ -2,7 +2,7 @@ import React from 'react';
 const FACE={ar:'var(--font-scripture-arabic)',he:'var(--font-scripture-hebrew)',hi:'var(--font-scripture-devanagari)',ne:'var(--font-scripture-devanagari)',gu:'var(--font-scripture-gujarati)',el:'var(--font-scripture-greek)',grc:'var(--font-scripture-greek)',zh:'var(--font-scripture-han)'};
 export function CatalogRow({id,title,subject,lang='en',dir='ltr',release,meta,onOpen,first=false,style,...rest}){
   const base=(lang||'en').split('-')[0];
-  return React.createElement('button',{onClick:onOpen,style:{display:'grid',gridTemplateColumns:'minmax(0,1fr) auto',gap:14,alignItems:'center',width:'100%',padding:'12px 16px',border:'none',borderTop:first?'none':'var(--border-hairline)',background:'transparent',cursor:onOpen?'pointer':'default',textAlign:'start',color:'inherit',...style},...rest},
+  return React.createElement('button',{onClick:onOpen,style:{boxSizing:'border-box',display:'grid',gridTemplateColumns:'minmax(0,1fr) auto',gap:14,alignItems:'center',width:'100%',padding:'12px 16px',border:'none',borderTop:first?'none':'var(--border-hairline)',background:'transparent',cursor:onOpen?'pointer':'default',textAlign:'start',color:'inherit',...style},...rest},
     React.createElement('div',{style:{minWidth:0}},
       subject?React.createElement('div',{style:{font:'var(--type-overline)',letterSpacing:'var(--ls-overline)',textTransform:'uppercase',color:'var(--text-muted)'}},subject):null,
       React.createElement('div',{dir,lang,style:{font:`500 15px/1.35 ${FACE[base]||'var(--font-core)'}`,color:'var(--text-title)',marginTop:3,textAlign:dir==='rtl'?'end':'start',letterSpacing:FACE[base]?0:'-0.01em'}},title),

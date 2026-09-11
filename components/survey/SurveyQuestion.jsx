@@ -1,7 +1,7 @@
 import React from 'react';
 const BANDS=['Not yet','A little','Mostly','Fully'];
 export function SurveyQuestion({perspective,progress,question,bands=BANDS,value,onChange,note='Illustrative',freeTextPlaceholder='Anything you want to add? Optional.',style,...rest}){
-  return React.createElement('div',{style:{padding:18,borderRadius:'var(--r-xl)',background:'var(--glass-fill-3)',border:'var(--border-glass)',boxShadow:'var(--shadow-card), var(--inner-top), var(--inner-edge)',...style},...rest},
+  return React.createElement('div',{style:{boxSizing:'border-box',padding:18,borderRadius:'var(--r-xl)',background:'var(--glass-fill-3)',border:'var(--border-glass)',boxShadow:'var(--shadow-card), var(--inner-top), var(--inner-edge)',...style},...rest},
     React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'baseline'}},
       React.createElement('span',{style:{font:'var(--type-overline)',letterSpacing:'var(--ls-overline)',textTransform:'uppercase',color:'var(--text-muted)',whiteSpace:'nowrap'}},perspective,progress?' · '+progress:''),
       note?React.createElement('span',{style:{font:'var(--type-caption)',color:'var(--text-dim)'}},note):null),

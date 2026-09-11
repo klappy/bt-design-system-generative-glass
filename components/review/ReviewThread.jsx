@@ -1,6 +1,6 @@
 import React from 'react';
 export function ReviewThread({anchor,comments=[],resolved=false,onToggleResolved,onReply,replyPlaceholder='Reply',style,...rest}){
-  return React.createElement('div',{style:{display:'grid',gap:12,padding:16,borderRadius:'var(--r-xl)',background:'var(--glass-fill-3)',border:'var(--border-glass)',
+  return React.createElement('div',{style:{boxSizing:'border-box',display:'grid',gap:12,padding:16,borderRadius:'var(--r-xl)',background:'var(--glass-fill-3)',border:'var(--border-glass)',
     boxShadow:'var(--shadow-card), var(--inner-top), var(--inner-edge)',transition:'all var(--dur-slow) var(--ease-liquid)',opacity:resolved?.62:1,filter:resolved?'saturate(.8)':'none',...style},...rest},
     React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center'}},
       React.createElement('span',{style:{font:'var(--type-caption)',color:'var(--text-muted)'}},anchor,' · ',comments.length,' comment',comments.length===1?'':'s'),

@@ -1,7 +1,7 @@
 import React from 'react';
 const STAGE={understand:['Understand','var(--aurora-sky)'],translate:['Translate','var(--aurora-peach)'],revise:['Revise and check','var(--aurora-lavender)'],done:['Done','var(--aurora-mint)']};
 export function ProgressGrid({books=[],stages=STAGE,legend=true,style,...rest}){
-  return React.createElement('div',{style:{padding:'14px 16px',borderRadius:'var(--r-lg)',background:'var(--glass-fill-3)',border:'var(--border-glass)',boxShadow:'var(--shadow-card), var(--inner-top)',display:'grid',gap:8,...style},...rest},
+  return React.createElement('div',{style:{boxSizing:'border-box',padding:'14px 16px',borderRadius:'var(--r-lg)',background:'var(--glass-fill-3)',border:'var(--border-glass)',boxShadow:'var(--shadow-card), var(--inner-top)',display:'grid',gap:8,...style},...rest},
     books.map((b,i)=>{const done=b.chapters.filter(s=>s==='done').length;return React.createElement('div',{key:i,style:{display:'grid',gridTemplateColumns:'82px minmax(0,1fr) 44px',gap:10,alignItems:'center'}},
       React.createElement('span',{style:{font:'var(--type-label)',color:'var(--text-title)'}},b.book),
       React.createElement('div',{style:{display:'flex',gap:3,flexWrap:'wrap'}},b.chapters.map((s,j)=>React.createElement('span',{key:j,title:`Chapter ${j+1}${s&&stages[s]?' · '+stages[s][0]:''}`,style:{display:'block',width:14,height:14,borderRadius:'var(--r-key)',

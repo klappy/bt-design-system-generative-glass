@@ -18,7 +18,7 @@ export function LanguagePicker({languages=[],context='attribute',value,onChange,
   const chip=(st,t)=>React.createElement('span',{key:t,title:`${t} · ${st==='a'?'available':st==='i'?'AI-translatable':'none'}`,style:{display:'inline-flex',alignItems:'center',padding:'3px 7px',borderRadius:'var(--r-pill)',font:'var(--fw-medium) 9px/1.1 var(--font-core)',letterSpacing:'.02em',whiteSpace:'nowrap',
       background:st==='n'?'transparent':'var(--glass-fill-4)',border:st==='n'?'1px dashed var(--text-dim)':'var(--border-glass)',color:st==='n'?'var(--text-dim)':'var(--text-title)',boxShadow:st==='n'?'none':'var(--inner-top)'}},t,
     st==='i'?React.createElement('span',{style:{marginInlineStart:4,padding:'1px 4px',borderRadius:'var(--r-pill)',background:'var(--surface-inverse)',color:'var(--text-on-inverse)',font:'var(--fw-semibold) 8px/1.1 var(--font-core)',letterSpacing:'.04em'}},'AI'):null);
-  const row=r=>{const a=value===r.code;const base=(r.code||'').split('-')[0];return React.createElement('button',{key:r.code,onClick:()=>onChange&&onChange(r.code,r),style:{display:'flex',justifyContent:'space-between',alignItems:'center',gap:12,width:'100%',padding:'10px 12px',borderRadius:'var(--r-sm)',border:'.5px solid transparent',
+  const row=r=>{const a=value===r.code;const base=(r.code||'').split('-')[0];return React.createElement('button',{key:r.code,onClick:()=>onChange&&onChange(r.code,r),style:{boxSizing:'border-box',display:'flex',justifyContent:'space-between',alignItems:'center',gap:12,width:'100%',padding:'10px 12px',borderRadius:'var(--r-sm)',border:'.5px solid transparent',
       background:a?'var(--glass-fill-3)':'transparent',boxShadow:a?'var(--inner-top), var(--glow-focus)':'none',cursor:'pointer',textAlign:'start',color:'inherit',opacity:hasAny(r.coverage)||context==='locale'?1:.72,transition:'var(--t-hover)'}},
     React.createElement('span',{style:{display:'flex',flexDirection:'column',gap:2,minWidth:0,flex:1}},
       React.createElement('span',{style:{display:'flex',gap:8,alignItems:'baseline',flexWrap:'wrap'}},
@@ -30,7 +30,7 @@ export function LanguagePicker({languages=[],context='attribute',value,onChange,
   const group=(label,rows)=>rows.length?[React.createElement('div',{key:'h'+label,style:{padding:'10px 12px 4px',font:'var(--type-overline)',letterSpacing:'var(--ls-overline)',textTransform:'uppercase',color:'var(--text-dim)'}},label),...rows.map(row)]:[];
   const total=sugg.length+rest_.length;
   const sheet=surface==='sheet';
-  return React.createElement('div',{style:{width:'100%',maxWidth:sheet?390:520,padding:sheet?'12px 16px 22px':'16px 16px 18px',borderRadius:sheet?'34px 34px 22px 22px':'var(--r-xl)',
+  return React.createElement('div',{style:{boxSizing:'border-box',width:'100%',maxWidth:sheet?390:520,padding:sheet?'12px 16px 22px':'16px 16px 18px',borderRadius:sheet?'34px 34px 22px 22px':'var(--r-xl)',
     background:'var(--material-floating)',backdropFilter:'blur(var(--blur-heavy)) var(--sat-glass)',WebkitBackdropFilter:'blur(var(--blur-heavy)) var(--sat-glass)',border:'var(--border-glass)',boxShadow:'var(--shadow-float), var(--inner-top)',color:'var(--text-title)',...style},...rest},
     sheet?React.createElement('span',{'aria-hidden':true,style:{width:36,height:4,borderRadius:2,background:'var(--text-faint)',margin:'0 auto 12px',display:'block'}}):null,
     React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:10}},
