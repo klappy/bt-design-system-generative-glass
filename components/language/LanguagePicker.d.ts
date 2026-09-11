@@ -1,7 +1,6 @@
 /**
  * One picker for every place a language is chosen. Suggested group first, search on autonym/English/code/region,
  * three coverage states per resource type. Universe depends on context.
- * @startingPoint section="Language" subtitle="Thousands of languages, coverage per resource type" viewport="560x520"
  */
 export interface LanguageRow{
   /** BCP-47 */
