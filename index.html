@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Generative Glass · design system for Bible Translation apps</title>
+<meta name="description" content="Shared design system for 3D Review, the FIA companion and the Aquifer Window. Versioned as the visual design contract between the apps.">
+<script src="/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;500&family=Noto+Serif+Hebrew:wght@400;500&family=Noto+Naskh+Arabic:wght@400;500&family=Noto+Serif+Devanagari:wght@400;500&display=swap">
+<script src="/_ds_bundle.js"></script>
+<script src="https://unpkg.com/d3@7.9.0/dist/d3.min.js" integrity="sha384-CjloA8y00+1SDAUkjs099PVfnY2KmDC2BZnws9kh8D/lX1s46w6EPhpXdqMfjK6i" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js" integrity="sha384-Ukv1p/xTma6P4/2bY5KzWBw+ydSpXmhCMtyciIQVDJ1RmOxtCYNMF1uXT9T63H67" crossorigin="anonymous"></script>
+<script src="/world-outline.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--studio-bg);color:var(--text-body);font:var(--type-body);-webkit-font-smoothing:antialiased}
+a{color:var(--link);text-decoration:none}a:hover{color:var(--link-hover)}
+input[type=range]{accent-color:var(--ink-700)}[data-theme="dark"] input[type=range]{accent-color:#fff}
+@keyframes gg-rise-b{from{opacity:0;transform:translateY(14px) scale(.94);filter:blur(8px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes gg-orbit{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-6px)}}
+html{scroll-behavior:smooth}section[id]{scroll-margin-top:16px}
+@media (max-width:900px){.gg-shell{grid-template-columns:minmax(0,1fr) !important}.gg-nav{position:sticky;top:0;height:auto !important;padding:12px 14px !important;gap:10px !important;border-right:none !important;border-bottom:var(--border-glass);z-index:5}.gg-nav-toggle{display:inline-flex !important;align-items:center;justify-content:center}.gg-nav-body{max-height:min(60vh,520px)}.gg-nav-foot{display:none}section[id]{scroll-margin-top:120px}main{padding:24px 18px 80px !important}}
+</style>
+</helmet>
+<div aria-hidden="true" style="position:fixed;inset:-18%;background:var(--aurora-field);filter:blur(28px);animation:gg-drift 22s var(--ease-liquid) infinite;pointer-events:none;z-index:0"></div>
+<div class="gg-shell" style="position:relative;z-index:1;display:grid;grid-template-columns:236px minmax(0,1fr);min-height:100vh">
+
+<nav class="gg-nav" style="position:sticky;top:0;height:100vh;box-sizing:border-box;padding:24px 14px 20px;display:flex;flex-direction:column;gap:14px;background:var(--glass-fill-2);backdrop-filter:blur(var(--blur-strong)) var(--sat-glass);-webkit-backdrop-filter:blur(var(--blur-strong)) var(--sat-glass);border-right:var(--border-glass);box-shadow:var(--inner-top)">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:0 6px">
+    <div>
+      <a href="#overview" style="display:block;font:var(--fw-medium) 17px/1.2 var(--font-core);letter-spacing:-0.045em;color:var(--text-title)">Generative Glass</a>
+      <div style="margin-top:3px;font:var(--type-caption);color:var(--text-muted)">Design system for Bible Translation apps</div>
+    </div>
+    <button class="gg-nav-toggle" onClick="{{ toggleNav }}" aria-label="Menu" style="display:none;width:36px;height:36px;border-radius:var(--r-pill);background:var(--glass-fill-3);border:var(--border-glass);box-shadow:var(--inner-top);cursor:pointer;color:var(--text-title);font:var(--fw-semibold) 12px/1 var(--font-core);flex:none">{{ navToggleLabel }}</button>
+  </div>
+  <a href="{{ versionHref }}" title="The visual design contract" style="display:flex;align-items:center;gap:8px;margin:0 6px;padding:7px 12px;border-radius:var(--r-pill);background:var(--glass-fill-3);border:var(--border-glass);box-shadow:var(--shadow-rest),var(--inner-top);font:var(--fw-semibold) 13px/1 var(--font-numeric);color:var(--text-title);letter-spacing:-0.01em;width:max-content;max-width:100%">
+    <span>{{ versionLabel }}</span><span style="font:var(--type-caption);color:var(--text-muted)">· design contract</span><span style="font:10px var(--font-mono);color:var(--text-dim)">{{ versionSha }}</span>
+  </a>
+  <div class="gg-nav-body" style="{{ navBodyStyle }}">
+    <button onClick="{{ toggleDark }}" style="display:flex;align-items:center;justify-content:space-between;margin:0 6px 4px;padding:8px 12px;border-radius:var(--r-pill);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--inner-top);cursor:pointer;font:var(--type-caption);color:var(--text-title);transition:var(--t-hover)" style-hover="transform:translateY(-1px)">
+      <span>{{ themeLabel }}</span>
+      <span style="width:30px;height:18px;border-radius:999px;background:var(--surface-inverse);position:relative;transition:background var(--dur-fast) var(--ease-liquid)"><span style="{{ knobStyle }}"></span></span>
+    </button>
+    <sc-for list="{{ navGroups }}" as="g" hint-placeholder-count="4">
+      <div style="display:flex;flex-direction:column;gap:1px">
+        <div style="padding:10px 10px 4px;font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-dim)">{{ g.label }}</div>
+        <sc-for list="{{ g.items }}" as="n" hint-placeholder-count="4">
+          <a href="{{ n.href }}" target="{{ n.target }}" onClick="{{ n.click }}" style="{{ n.style }}" style-hover="background:var(--glass-fill-3);color:var(--text-title)"><span>{{ n.label }}</span><span style="font:10px var(--font-mono);color:var(--text-dim)">{{ n.meta }}</span></a>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+  <div class="gg-nav-foot" style="padding:0 6px;font:var(--type-caption);color:var(--text-dim)">3D Review · FIA · Aquifer Window</div>
+</nav>
+
+<main style="min-width:0;padding:40px 48px 120px;max-width:1120px;box-sizing:border-box;display:flex;flex-direction:column;gap:64px">
+
+<section id="overview" data-screen-label="Overview" style="display:flex;flex-direction:column;gap:20px">
+  <div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Overview</div>
+  <h1 style="margin:0;font:var(--fw-medium) 44px/1.08 var(--font-core);letter-spacing:-0.03em;color:var(--text-title);max-width:760px;text-wrap:pretty">One glass language for every Bible Translation app. Scripture stays legible; everything around it is quiet.</h1>
+  <p style="margin:0;max-width:660px;font:var(--type-body);color:var(--text-body);text-wrap:pretty">Generative Glass is the shared system behind 3D Review, the FIA companion, Aquifer Window and the apps that follow. Surfaces are translucent frosted glass over a slow aurora, edges are hairlines of light, depth is diffuse. The aurora and the glass itself are parametric: they respond to the passage, its script, and where a project is in its process. The apps have different building blocks; the material, the type, the motion and the voice are the same.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">
+    <div style="padding:16px 18px;border-radius:var(--r-lg);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-rest),var(--inner-top)"><div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">3D Review</div><div style="margin-top:6px;font:var(--type-label);color:var(--text-title)">Surveys from teams, communities, churches and consultants on the health of the process</div></div>
+    <div style="padding:16px 18px;border-radius:var(--r-lg);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-rest),var(--inner-top)"><div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">FIA</div><div style="margin-top:6px;font:var(--type-label);color:var(--text-title)">Companion for the FIA process of understanding scripture before drafting</div></div>
+    <div style="padding:16px 18px;border-radius:var(--r-lg);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-rest),var(--inner-top)"><div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Aquifer Window</div><div style="margin-top:6px;font:var(--type-label);color:var(--text-title)">Browse and open translation resources: images, maps, articles, key terms</div></div>
+    <div style="padding:16px 18px;border-radius:var(--r-lg);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-rest),var(--inner-top)"><div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Shared</div><div style="margin-top:6px;font:var(--type-label);color:var(--text-title)">Passages, review threads, progress, teams, sync, resources, key terms</div></div>
+  </div>
+</section>
+
+<section id="color" data-screen-label="Color" style="display:flex;flex-direction:column;gap:18px">
+  <div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Foundations</div>
+  <h2 style="margin:0;font:var(--type-hero);letter-spacing:var(--ls-hero);color:var(--text-title)">Color</h2>
+  <p style="margin:0;max-width:620px;color:var(--text-body)">Four families. Ink for text, paper for the studio, aurora for what lives behind glass, and an accent budget of exactly three colors. Status is carried by aurora tint and by shape, never by a fifth accent. Saturation arrives only through imagery.</p>
+  <div style="display:grid;gap:14px">
+    <sc-for list="{{ colorGroups }}" as="g" hint-placeholder-count="5">
+      <div style="padding:16px 18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+        <div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap"><div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">{{ g.name }}</div><div style="font:var(--type-caption);color:var(--text-muted)">{{ g.note }}</div></div>
+        <div style="margin-top:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px">
+          <sc-for list="{{ g.swatches }}" as="s" hint-placeholder-count="6">
+            <button onClick="{{ copy }}" data-code="{{ s.css }}" title="Copy" style="text-align:left;padding:0;border:none;background:transparent;cursor:pointer;display:flex;flex-direction:column;gap:6px">
+              <span style="{{ s.style }}"></span>
+              <span style="font:var(--fw-medium) 11px/1.2 var(--font-mono);color:var(--text-title)">{{ s.token }}</span>
+              <span style="font:11px/1.2 var(--font-mono);color:var(--text-dim)">{{ s.hex }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section id="type" data-screen-label="Type" style="display:flex;flex-direction:column;gap:18px">
+  <div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Foundations</div>
+  <h2 style="margin:0;font:var(--type-hero);letter-spacing:var(--ls-hero);color:var(--text-title)">Type</h2>
+  <p style="margin:0;max-width:640px">Two roles. UI type is SF Pro (Display for titles and numerals, Text for reading sizes), weights 400 to 700. Scripture is the one exception: it gets a reading face per script, so Hebrew, Greek, Arabic and Devanagari render in a serif drawn for that script, never in a fallback. UI never changes with the scripture language.</p>
+  <div style="padding:6px 22px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+    <div style="display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:18px;align-items:baseline;padding:16px 0;border-bottom:var(--border-hairline)"><div style="font:11px/1.4 var(--font-mono);color:var(--text-muted)">--type-hero<br>28 / 1.16 · 500 · −0.02em</div><div style="font:var(--type-hero);letter-spacing:var(--ls-hero);color:var(--text-title)">Good morning,<br>Miriam</div><button onClick="{{ copy }}" data-code="font:var(--type-hero);letter-spacing:var(--ls-hero);" style="padding:5px 11px;border-radius:999px;border:var(--border-glass);background:var(--glass-fill-3);font:var(--fw-medium) 10px/1.1 var(--font-core);color:var(--text-muted);cursor:pointer">Copy</button></div>
+    <div style="display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:18px;align-items:baseline;padding:16px 0;border-bottom:var(--border-hairline)"><div style="font:11px/1.4 var(--font-mono);color:var(--text-muted)">--type-card-title<br>19 / 1.24 · 600 · −0.015em</div><div style="font:var(--type-card-title);letter-spacing:var(--ls-title);color:var(--text-title)">River assessment, in preparation</div><button onClick="{{ copy }}" data-code="font:var(--type-card-title);letter-spacing:var(--ls-title);" style="padding:5px 11px;border-radius:999px;border:var(--border-glass);background:var(--glass-fill-3);font:var(--fw-medium) 10px/1.1 var(--font-core);color:var(--text-muted);cursor:pointer">Copy</button></div>
+    <div style="display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:18px;align-items:baseline;padding:16px 0;border-bottom:var(--border-hairline)"><div style="font:11px/1.4 var(--font-mono);color:var(--text-muted)">--type-time<br>17 / 1.3 · 600 · Display</div><div style="font:var(--type-time);letter-spacing:-.01em;color:var(--text-title)">Ruth 2:1–13 · 24 responses · 09:41</div><button onClick="{{ copy }}" data-code="font:var(--type-time);letter-spacing:-.01em;" style="padding:5px 11px;border-radius:999px;border:var(--border-glass);background:var(--glass-fill-3);font:var(--fw-medium) 10px/1.1 var(--font-core);color:var(--text-muted);cursor:pointer">Copy</button></div>
+    <div style="display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:18px;align-items:baseline;padding:16px 0;border-bottom:var(--border-hairline)"><div style="font:11px/1.4 var(--font-mono);color:var(--text-muted)">--type-body<br>15 / 1.4 · 400</div><div style="font:var(--type-body);color:var(--text-body)">Short role-specific surveys reveal the health of the translation process.</div><button onClick="{{ copy }}" data-code="font:var(--type-body);" style="padding:5px 11px;border-radius:999px;border:var(--border-glass);background:var(--glass-fill-3);font:var(--fw-medium) 10px/1.1 var(--font-core);color:var(--text-muted);cursor:pointer">Copy</button></div>
+    <div style="display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:18px;align-items:baseline;padding:16px 0;border-bottom:var(--border-hairline)"><div style="font:11px/1.4 var(--font-mono);color:var(--text-muted)">--type-label<br>13 / 1.35 · 500</div><div style="font:var(--type-label);color:var(--text-body)">Here to take the survey?</div><button onClick="{{ copy }}" data-code="font:var(--type-label);" style="padding:5px 11px;border-radius:999px;border:var(--border-glass);background:var(--glass-fill-3);font:var(--fw-medium) 10px/1.1 var(--font-core);color:var(--text-muted);cursor:pointer">Copy</button></div>
+    <div style="display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:18px;align-items:baseline;padding:16px 0;border-bottom:var(--border-hairline)"><div style="font:11px/1.4 var(--font-mono);color:var(--text-muted)">--type-caption<br>12 / 1.3 · 400</div><div style="font:var(--type-caption);color:var(--text-muted)">Last synced 2 min ago · River project</div><button onClick="{{ copy }}" data-code="font:var(--type-caption);" style="padding:5px 11px;border-radius:999px;border:var(--border-glass);background:var(--glass-fill-3);font:var(--fw-medium) 10px/1.1 var(--font-core);color:var(--text-muted);cursor:pointer">Copy</button></div>
+    <div style="display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:18px;align-items:baseline;padding:16px 0"><div style="font:11px/1.4 var(--font-mono);color:var(--text-muted)">--type-overline<br>9 / 1.2 · 600 · +0.14em</div><div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Translator · Community · Church · Consultant</div><button onClick="{{ copy }}" data-code="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;" style="padding:5px 11px;border-radius:999px;border:var(--border-glass);background:var(--glass-fill-3);font:var(--fw-medium) 10px/1.1 var(--font-core);color:var(--text-muted);cursor:pointer">Copy</button></div>
+  </div>
+  <div style="padding:18px 22px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+    <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline"><div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title);flex:none;white-space:nowrap">Scripture reading faces</div><div style="font:var(--type-caption);color:var(--text-muted)">17 / 1.6 · 400 · tracking 0 · Noto Serif family, one face per script · RTL flips the passage, not the UI</div></div>
+    <div style="margin-top:14px;display:grid;gap:0">
+      <sc-for list="{{ scripts }}" as="sc" hint-placeholder-count="5">
+        <div style="display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:18px;align-items:start;padding:14px 0;border-top:var(--border-hairline)">
+          <div style="font:11px/1.4 var(--font-mono);color:var(--text-muted)">{{ sc.name }}<br>{{ sc.font }}</div>
+          <div dir="{{ sc.dir }}" lang="{{ sc.lang }}" style="{{ sc.style }}"><span style="font:var(--type-overline);letter-spacing:0;color:var(--text-dim);vertical-align:super;margin-inline-end:4px">1</span>{{ sc.text }}</div>
+          <button onClick="{{ copy }}" data-code="{{ sc.css }}" style="padding:5px 11px;border-radius:999px;border:var(--border-glass);background:var(--glass-fill-3);font:var(--fw-medium) 10px/1.1 var(--font-core);color:var(--text-muted);cursor:pointer">Copy</button>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="glass" data-screen-label="Glass" style="display:flex;flex-direction:column;gap:18px">
+  <div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Foundations</div>
+  <h2 style="margin:0;font:var(--type-hero);letter-spacing:var(--ls-hero);color:var(--text-title)">Glass</h2>
+  <p style="margin:0;max-width:620px">Every surface carries three things at once: a 0.5px white hairline, an inset top light, and a faint prismatic sheen on the diagonal. Blur only where a surface floats over content it does not own. Never more than two glass levels stacked. Scripture always sits on fill 3 or higher.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px">
+    <div style="padding:16px 18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">Fill ladder</div>
+      <div style="margin-top:12px;position:relative;height:120px;border-radius:var(--r-lg);overflow:hidden;background:var(--aurora-field)"><div style="position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px">
+        <div style="border-radius:var(--r-sm);background:var(--glass-fill-1);border:var(--border-glass);box-shadow:var(--inner-top);display:grid;place-items:center;font:11px var(--font-mono);color:var(--text-title)">.28</div>
+        <div style="border-radius:var(--r-sm);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--inner-top);display:grid;place-items:center;font:11px var(--font-mono);color:var(--text-title)">.46</div>
+        <div style="border-radius:var(--r-sm);background:var(--glass-fill-3);border:var(--border-glass);box-shadow:var(--inner-top);display:grid;place-items:center;font:11px var(--font-mono);color:var(--text-title)">.62</div>
+        <div style="border-radius:var(--r-sm);background:var(--glass-fill-4);border:var(--border-glass);box-shadow:var(--inner-top);display:grid;place-items:center;font:11px var(--font-mono);color:var(--text-title)">.78</div>
+      </div></div>
+      <pre style="margin:12px 0 0;font:11px/1.5 var(--font-mono);color:var(--text-muted);background:var(--glass-fill-1);border:var(--border-hairline);border-radius:var(--r-sm);padding:10px 12px;overflow:auto;white-space:pre-wrap">--glass-fill-1: rgba(255,255,255,.28);  /* sheer */
+--glass-fill-2: rgba(255,255,255,.46);  /* card */
+--glass-fill-3: rgba(255,255,255,.62);  /* raised, chip, scripture */
+--glass-fill-4: rgba(255,255,255,.78);  /* sheet, long reading */</pre>
+    </div>
+    <div style="padding:16px 18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">Blur ladder</div>
+      <div style="margin-top:12px;position:relative;height:120px;border-radius:var(--r-lg);overflow:hidden;background:url(https://s3.amazonaws.com/cbbt-er.public/media/photos/a269/1000.jpg) center/cover"><div style="position:absolute;inset:0;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:12px">
+        <div style="border-radius:var(--r-sm);background:rgba(255,255,255,.28);backdrop-filter:blur(8px) saturate(160%);border:var(--border-glass);display:grid;place-items:center;font:11px var(--font-mono);color:#fff">8</div>
+        <div style="border-radius:var(--r-sm);background:rgba(255,255,255,.28);backdrop-filter:blur(16px) saturate(160%);border:var(--border-glass);display:grid;place-items:center;font:11px var(--font-mono);color:#fff">16</div>
+        <div style="border-radius:var(--r-sm);background:rgba(255,255,255,.28);backdrop-filter:blur(24px) saturate(160%);border:var(--border-glass);display:grid;place-items:center;font:11px var(--font-mono);color:#fff">24</div>
+        <div style="border-radius:var(--r-sm);background:rgba(255,255,255,.28);backdrop-filter:blur(40px) saturate(160%);border:var(--border-glass);display:grid;place-items:center;font:11px var(--font-mono);color:#fff">40</div>
+        <div style="border-radius:var(--r-sm);background:rgba(255,255,255,.28);backdrop-filter:blur(64px) saturate(160%);border:var(--border-glass);display:grid;place-items:center;font:11px var(--font-mono);color:#fff">64</div>
+      </div></div>
+      <pre style="margin:12px 0 0;font:11px/1.5 var(--font-mono);color:var(--text-muted);background:var(--glass-fill-1);border:var(--border-hairline);border-radius:var(--r-sm);padding:10px 12px;overflow:auto;white-space:pre-wrap">backdrop-filter: blur(var(--blur-strong)) var(--sat-glass);
+/* sheer 8 · soft 16 · medium 24 · strong 40 · heavy 64 */</pre>
+    </div>
+    <div style="padding:16px 18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">Edges and inner light</div>
+      <div style="margin-top:12px;position:relative;height:120px;border-radius:var(--r-lg);overflow:hidden;background:var(--aurora-field)"><div style="position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px">
+        <div style="border-radius:var(--r-md);background:var(--glass-fill-2);border:var(--border-glass);display:grid;place-items:end center;padding-bottom:8px;font:10px var(--font-mono);color:var(--text-muted)">hairline</div>
+        <div style="border-radius:var(--r-md);background:var(--glass-fill-2);box-shadow:var(--inner-top),var(--inner-edge);display:grid;place-items:end center;padding-bottom:8px;font:10px var(--font-mono);color:var(--text-muted)">inner-top</div>
+        <div style="position:relative;border-radius:var(--r-md);background:var(--glass-fill-2);display:grid;place-items:end center;padding-bottom:8px;font:10px var(--font-mono);color:var(--text-muted)"><span style="position:absolute;inset:0;border-radius:inherit;background:var(--refraction);opacity:.6"></span><span style="position:relative">refraction</span></div>
+      </div></div>
+      <pre style="margin:12px 0 0;font:11px/1.5 var(--font-mono);color:var(--text-muted);background:var(--glass-fill-1);border:var(--border-hairline);border-radius:var(--r-sm);padding:10px 12px;overflow:auto;white-space:pre-wrap">border: var(--border-glass);            /* .5px white .7 */
+box-shadow: var(--inner-top), var(--inner-edge);
+&amp;::before { background: var(--refraction); opacity:.6 }</pre>
+    </div>
+    <div style="padding:16px 18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">Shadow ladder</div>
+      <div style="margin-top:12px;position:relative;height:120px;border-radius:var(--r-lg);overflow:hidden;background:var(--surface-app)"><div style="position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:22px">
+        <div style="border-radius:var(--r-md);background:var(--surface-solid);box-shadow:var(--shadow-rest);display:grid;place-items:center;font:10px var(--font-mono);color:var(--text-muted)">rest</div>
+        <div style="border-radius:var(--r-md);background:var(--surface-solid);box-shadow:var(--shadow-card);display:grid;place-items:center;font:10px var(--font-mono);color:var(--text-muted)">card</div>
+        <div style="border-radius:var(--r-md);background:var(--surface-solid);box-shadow:var(--shadow-float);display:grid;place-items:center;font:10px var(--font-mono);color:var(--text-muted)">float</div>
+      </div></div>
+      <pre style="margin:12px 0 0;font:11px/1.5 var(--font-mono);color:var(--text-muted);background:var(--glass-fill-1);border:var(--border-hairline);border-radius:var(--r-sm);padding:10px 12px;overflow:auto;white-space:pre-wrap">--shadow-card: 0 2px 6px rgba(20,28,45,.05),
+  0 14px 34px rgba(20,28,45,.08), 0 40px 80px rgba(20,28,45,.06);</pre>
+    </div>
+  </div>
+  <div style="padding:16px 18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:18px;align-items:center">
+    <div><div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">The card recipe</div><p style="margin:8px 0 0;font:var(--type-caption);color:var(--text-muted);text-wrap:pretty">Fill 2, strong blur, 28px radius, hairline border, card shadow, inner top light, sheen. Image wells sit 10px inside at 22px radius.</p>
+    <pre style="margin:12px 0 0;font:11px/1.5 var(--font-mono);color:var(--text-muted);background:var(--glass-fill-1);border:var(--border-hairline);border-radius:var(--r-sm);padding:10px 12px;overflow:auto;white-space:pre-wrap">.gg-card{
+  background:var(--glass-fill-2);
+  backdrop-filter:blur(var(--blur-strong)) var(--sat-glass);
+  border:var(--border-glass);
+  border-radius:var(--r-xl);
+  box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);
+}</pre><button onClick="{{ copy }}" data-code=".gg-card{background:var(--glass-fill-2);backdrop-filter:blur(var(--blur-strong)) var(--sat-glass);border:var(--border-glass);border-radius:var(--r-xl);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);}" style="margin-top:10px;padding:8px 14px;border-radius:999px;border:var(--border-glass);background:var(--glass-fill-3);font:var(--fw-semibold) 12px/1 var(--font-core);color:var(--text-title);cursor:pointer;box-shadow:var(--shadow-rest),var(--inner-top)">Copy CSS</button></div>
+    <div style="position:relative;border-radius:var(--r-lg);overflow:hidden;background:var(--aurora-field);padding:24px;display:grid;place-items:center">
+      <div style="position:relative;width:100%;max-width:340px;border-radius:var(--r-xl);overflow:hidden;background:var(--glass-fill-2);backdrop-filter:blur(var(--blur-strong)) var(--sat-glass);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge)">
+        <span aria-hidden="true" style="position:absolute;inset:0;border-radius:inherit;background:var(--refraction);opacity:.6;pointer-events:none"></span>
+        <div style="position:relative;margin:10px 10px 0;height:150px;border-radius:var(--r-lg);overflow:hidden;background:url(https://s3.amazonaws.com/cbbt-er.public/media/photos/a1888/1000.jpg) center/cover"><span style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,22,40,0) 40%,rgba(8,22,42,.85) 100%)"></span><span style="position:absolute;left:14px;bottom:12px;font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:rgba(255,255,255,.85)">Image · FIA</span></div>
+        <div style="position:relative;padding:16px 18px 18px"><div style="font:var(--type-card-title);letter-spacing:var(--ls-title);color:var(--text-title)">Barley field</div><div style="margin-top:4px;font:var(--type-caption);color:var(--text-muted)">Ruth 2 · FIA Images · offline</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="spacing" data-screen-label="Spacing and radius" style="display:flex;flex-direction:column;gap:18px">
+  <div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Foundations</div>
+  <h2 style="margin:0;font:var(--type-hero);letter-spacing:var(--ls-hero);color:var(--text-title)">Spacing and radius</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px">
+    <div style="padding:16px 18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">Spacing scale</div>
+      <div style="margin-top:12px;display:grid;gap:6px">
+        <sc-for list="{{ spacing }}" as="s" hint-placeholder-count="8">
+          <div style="display:grid;grid-template-columns:64px minmax(0,1fr) 36px;gap:10px;align-items:center"><span style="font:11px var(--font-mono);color:var(--text-muted)">{{ s.token }}</span><span style="{{ s.style }}"></span><span style="font:11px var(--font-mono);color:var(--text-dim);text-align:right">{{ s.px }}</span></div>
+        </sc-for>
+      </div>
+      <p style="margin:12px 0 0;font:var(--type-caption);color:var(--text-muted)">Gutter 18 on mobile, 24 on desktop · card padding 18 · stack gap 10 · inline gap 8 · scripture measure 34 to 40em.</p>
+    </div>
+    <div style="padding:16px 18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">Corner radii</div>
+      <div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+        <sc-for list="{{ radii }}" as="r" hint-placeholder-count="8">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><span style="{{ r.style }}"></span><span style="font:10px var(--font-mono);color:var(--text-muted)">{{ r.token }}</span><span style="font:10px var(--font-mono);color:var(--text-dim)">{{ r.px }}</span></div>
+        </sc-for>
+      </div>
+      <p style="margin:12px 0 0;font:var(--type-caption);color:var(--text-muted)">Keys and grid cells 6, tiles 14 to 18, image wells 22, cards 28, sheets 34. Everything interactive is a full pill. Nothing has a sharp corner.</p>
+    </div>
+  </div>
+</section>
+
+<section id="motion" data-screen-label="Motion" style="display:flex;flex-direction:column;gap:18px">
+  <div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Foundations</div>
+  <h2 style="margin:0;font:var(--type-hero);letter-spacing:var(--ls-hero);color:var(--text-title)">Motion</h2>
+  <p style="margin:0;max-width:620px">Organic and viscous. Nothing snaps, nothing fades linearly. Sequenced in three beats: what leaves softens, what connects draws, what arrives rises. A particle ring precedes anything about to expand.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px">
+    <div style="padding:16px 18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="display:flex;justify-content:space-between;align-items:center"><div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">Easing</div><button onClick="{{ togglePlay }}" style="padding:6px 14px;border-radius:999px;border:var(--border-glass);background:var(--glass-fill-3);font:var(--fw-semibold) 11px/1 var(--font-core);color:var(--text-title);cursor:pointer;box-shadow:var(--shadow-rest),var(--inner-top)">Play</button></div>
+      <div style="margin-top:14px;display:grid;gap:10px">
+        <div style="display:grid;grid-template-columns:90px minmax(0,1fr) 150px;gap:10px;align-items:center"><span style="font:11px var(--font-mono);color:var(--text-muted)">liquid</span><span style="position:relative;height:14px;border-radius:999px;background:var(--glass-fill-1);border:var(--border-hairline)"><span style="{{ easeLiquid }}"></span></span><span style="font:10px var(--font-mono);color:var(--text-dim)">(.22,1,.36,1) default</span></div>
+        <div style="display:grid;grid-template-columns:90px minmax(0,1fr) 150px;gap:10px;align-items:center"><span style="font:11px var(--font-mono);color:var(--text-muted)">swell</span><span style="position:relative;height:14px;border-radius:999px;background:var(--glass-fill-1);border:var(--border-hairline)"><span style="{{ easeSwell }}"></span></span><span style="font:10px var(--font-mono);color:var(--text-dim)">(.34,1.56,.64,1) entry</span></div>
+        <div style="display:grid;grid-template-columns:90px minmax(0,1fr) 150px;gap:10px;align-items:center"><span style="font:11px var(--font-mono);color:var(--text-muted)">damp</span><span style="position:relative;height:14px;border-radius:999px;background:var(--glass-fill-1);border:var(--border-hairline)"><span style="{{ easeDamp }}"></span></span><span style="font:10px var(--font-mono);color:var(--text-dim)">(.4,0,.2,1) keyboard, sheets</span></div>
+        <div style="display:grid;grid-template-columns:90px minmax(0,1fr) 150px;gap:10px;align-items:center"><span style="font:11px var(--font-mono);color:var(--text-muted)">flow</span><span style="position:relative;height:14px;border-radius:999px;background:var(--glass-fill-1);border:var(--border-hairline)"><span style="{{ easeFlow }}"></span></span><span style="font:10px var(--font-mono);color:var(--text-dim)">(.65,0,.35,1) path draw</span></div>
+      </div>
+      <pre style="margin:14px 0 0;font:11px/1.5 var(--font-mono);color:var(--text-muted);background:var(--glass-fill-1);border:var(--border-hairline);border-radius:var(--r-sm);padding:10px 12px;overflow:auto;white-space:pre-wrap">--dur-micro 140ms · --dur-fast 240ms · --dur-base 420ms
+--dur-slow 680ms · --dur-morph 1100ms · --float-cycle 6s</pre>
+    </div>
+    <div style="padding:16px 18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="display:flex;justify-content:space-between;align-items:center"><div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">Loops in play</div><button onClick="{{ replayRise }}" style="padding:6px 14px;border-radius:999px;border:var(--border-glass);background:var(--glass-fill-3);font:var(--fw-semibold) 11px/1 var(--font-core);color:var(--text-title);cursor:pointer;box-shadow:var(--shadow-rest),var(--inner-top)">Replay rise</button></div>
+      <div style="margin-top:14px;position:relative;height:190px;border-radius:var(--r-lg);overflow:hidden;background:var(--aurora-field);display:grid;grid-template-columns:repeat(4,1fr);align-items:center;justify-items:center;padding:0 8px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><div style="{{ riseStyle }}"></div><span style="font:10px var(--font-mono);color:var(--text-muted)">gg-rise</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><div style="width:64px;height:64px;border-radius:var(--r-md);background:var(--glass-fill-3);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top);animation:gg-float 6s var(--ease-liquid) infinite"></div><span style="font:10px var(--font-mono);color:var(--text-muted)">gg-float</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.DotRing" size="{{ 84 }}" rings="{{ 5 }}" dots="{{ 22 }}" hint-size="84px,84px"></x-import><span style="font:10px var(--font-mono);color:var(--text-muted)">gg-breathe</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><svg width="64" height="64" viewBox="0 0 64 64" style="overflow:visible"><path d="M32 2 C32 30, 8 26, 8 62 M32 2 C32 30, 56 26, 56 62" fill="none" stroke="rgba(120,132,152,.6)" stroke-width="1" stroke-linecap="round" stroke-dasharray="200" style="animation:gg-draw 2.4s var(--ease-flow) infinite alternate"></path></svg><span style="font:10px var(--font-mono);color:var(--text-muted)">gg-draw</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="icons" data-screen-label="Icons" style="display:flex;flex-direction:column;gap:18px">
+  <div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Foundations</div>
+  <h2 style="margin:0;font:var(--type-hero);letter-spacing:var(--ls-hero);color:var(--text-title)">Icons</h2>
+  <p style="margin:0;max-width:620px">Stroke only, 1.7px, round caps and joins, 24px grid, monochrome. Lucide outlines. The 16 mapped today; BT apps will need book, headphones, users, check, cloud-off and message-circle from the same set. No emoji, ever. Metaphor graphics (jar fill, plant growth) are illustrations, not icons.</p>
+  <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass);display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px">
+    <sc-for list="{{ iconNames }}" as="ic" hint-placeholder-count="16">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 6px;border-radius:var(--r-sm);background:var(--glass-fill-1);border:var(--border-glass-soft);color:var(--text-title)">
+        <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.Icon" name="{{ ic }}" size="{{ 22 }}" hint-size="22px,22px"></x-import>
+        <span style="font:10px var(--font-mono);color:var(--text-muted)">{{ ic }}</span>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section id="components" data-screen-label="Glass primitives" style="display:flex;flex-direction:column;gap:18px">
+  <div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Library</div>
+  <h2 style="margin:0;font:var(--type-hero);letter-spacing:var(--ls-hero);color:var(--text-title)">Glass primitives</h2>
+  <p style="margin:0;max-width:640px">The material components every BT app builds from, live from the bundle. The travel kit's content components (FlightCard, RouteArc, WeatherPill, MapCanvas) are retired; DestinationCard, CategoryTile, SpotHero and RouteList are kept and generalized below as resource, category, place and step surfaces.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px">
+    <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">GlassButton</div><div style="font:var(--type-caption);color:var(--text-muted);margin-top:2px">glass · solid · dark · quiet · sm / md / lg. One primary per screen.</div>
+      <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:18px;border-radius:var(--r-lg);background:var(--aurora-field)">
+        <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.GlassButton" hint-size="88px,38px">Open</x-import>
+        <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.GlassButton" variant="solid" hint-size="88px,38px">Show me how</x-import>
+        <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.GlassButton" variant="dark" hint-size="88px,38px">Take the survey</x-import>
+        <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.GlassButton" variant="quiet" hint-size="88px,38px">Not now</x-import>
+        <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.GlassButton" size="sm" hint-size="60px,30px">Resolve</x-import>
+        <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.GlassButton" size="lg" variant="solid" hint-size="100px,46px">Submit</x-import>
+      </div>
+    </div>
+    <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">GlassIconButton · GlassChip</div><div style="font:var(--type-caption);color:var(--text-muted);margin-top:2px">Pills everywhere. Hover lifts 1px and glows; press scales .972</div>
+      <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:18px;border-radius:var(--r-lg);background:var(--aurora-field)">
+        <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.GlassIconButton" label="Record" hint-size="52px,52px"><x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.Icon" name="mic" hint-size="20px,20px"></x-import></x-import>
+        <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.GlassIconButton" label="Add" tone="dark" hint-size="52px,52px"><x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.Icon" name="plus" hint-size="20px,20px"></x-import></x-import>
+        <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.GlassChip" hint-size="60px,22px">Ruth 2</x-import>
+        <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.GlassChip" size="sm" hint-size="60px,18px">COMMUNITY</x-import>
+        <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.GlassButton" variant="glass" size="sm" hint-size="140px,34px">Here to take the survey?</x-import>
+        <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.GlassButton" variant="glass" size="sm" hint-size="150px,34px">Browse a sample assessment</x-import>
+      </div>
+    </div>
+    <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">GlassInput · composer row</div><div style="font:var(--type-caption);color:var(--text-muted);margin-top:2px">58px, fill 2, strong blur, focus glow. Voice is first-class: many reviewers speak, not type.</div>
+      <div style="margin-top:14px;display:flex;gap:8px;align-items:center;padding:18px;border-radius:var(--r-lg);background:var(--aurora-field)">
+        <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.GlassInput" placeholder="Add a comment on Ruth 2:3" style="flex:1" hint-size="100%,58px"></x-import>
+        <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.GlassIconButton" label="Voice input" size="{{ 58 }}" hint-size="58px,58px"><x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.Icon" name="mic" size="{{ 22 }}" color="var(--text-muted)" hint-size="22px,22px"></x-import></x-import>
+      </div>
+    </div>
+    <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">Header widgets</div><div style="font:var(--type-caption);color:var(--text-muted);margin-top:2px">StatusBar · Avatar · DotRing · Filament. Avatar shown with an Aquifer place image (UBS Images 831521); user photos come from the app's account, never from the system.</div>
+      <div style="margin-top:14px;border-radius:var(--r-lg);background:var(--aurora-field);overflow:hidden">
+        <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.StatusBar" hint-size="100%,32px"></x-import>
+        <div style="display:flex;gap:14px;align-items:center;padding:14px 18px 18px;flex-wrap:wrap">
+          <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.Avatar" src="https://cdn.aquifer.bible/aquifer-content/resources/Media/UBS-0045_bethlehem.jpg" size="{{ 54 }}" ring="{{ true }}" hint-size="54px,54px"></x-import>
+          <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.DotRing" size="{{ 96 }}" hint-size="96px,96px"><x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.GlassIconButton" label="Continue" size="{{ 40 }}" hint-size="40px,40px"><x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.Icon" name="chevronRight" size="{{ 18 }}" hint-size="18px,18px"></x-import></x-import></x-import>
+          <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.Filament" height="{{ 60 }}" branch="{{ true }}" hint-size="120px,60px"></x-import>
+        </div>
+      </div>
+    </div>
+    <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass);grid-column:1/-1">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">Mounted from the compiled bundle</div><div style="font:var(--type-caption);color:var(--text-muted);margin-top:2px">These four are the real design-system components, mounted from the compiled bundle (GenerativeGlassDesignSystem_1a4c8e). The specimens further down are the same designs written out by hand for the docs and will be replaced by bundle mounts as the page is rebuilt.</div>
+      <div style="margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;padding:18px;border-radius:var(--r-lg);background:var(--aurora-field)">
+        <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.ScripturePassage" reference="Ruth 2:1–2" version="BSB" source="Aquifer · BereanStandardBible" sync="ok" verses="{{ ggVerses }}" key-terms="{{ ggTerms }}" hint-size="100%,260px"></x-import>
+        <div style="display:grid;gap:12px;align-content:start">
+          <x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.SurveyQuestion" perspective="Community" progress="3 of 8" question="When the team reads a new draft aloud, how well does your community follow it?" value="{{ 2 }}" note="{{ null }}" hint-size="100%,220px"></x-import>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.SyncBadge" state="ok" hint-size="90px,24px"></x-import><x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.SyncBadge" state="syncing" count="{{ 3 }}" hint-size="110px,24px"></x-import><x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.SyncBadge" state="offline" hint-size="150px,24px"></x-import></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="bt" data-screen-label="BT components" style="display:flex;flex-direction:column;gap:18px">
+  <div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Library · Bible Translation</div>
+  <h2 style="margin:0;font:var(--type-hero);letter-spacing:var(--ls-hero);color:var(--text-title)">BT components</h2>
+  <p style="margin:0;max-width:640px">Seven content components shared across the apps, plus the five structural ones (tab bar, sheet, fields, search, desktop shell). Not every app uses every block; each one follows the card recipe so mixing them never looks mixed.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px">
+
+    <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass);grid-column:1/-1">
+      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline"><div><div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">ScripturePassage</div><div style="font:var(--type-caption);color:var(--text-muted);margin-top:2px">Fill 3 minimum. Verse numbers in overline ink, footnotes as superscript, key terms as inline chips. RTL scripts flip the passage block only; the header stays LTR.</div></div>
+        <div style="display:flex;padding:4px;border-radius:999px;background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--inner-top)"><sc-for list="{{ scriptTabs }}" as="t" hint-placeholder-count="5"><button onClick="{{ t.select }}" style="{{ t.style }}">{{ t.label }}</button></sc-for></div></div>
+      <div style="margin-top:14px;padding:24px;border-radius:var(--r-lg);background:var(--aurora-field);display:grid;place-items:center">
+        <div style="position:relative;width:100%;max-width:560px;border-radius:var(--r-xl);background:var(--glass-fill-3);backdrop-filter:blur(var(--blur-strong)) var(--sat-glass);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);padding:18px 22px 22px">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:8px;flex:none"><span style="font:var(--type-card-title);letter-spacing:var(--ls-title);color:var(--text-title);white-space:nowrap">{{ passage.ref }}</span><x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.GlassChip" hint-size="40px,22px">{{ passage.version }}</x-import></div>
+            <div style="{{ syncStyles.ok }}"><span style="width:7px;height:7px;border-radius:50%;background:var(--accent-teal);box-shadow:0 0 6px rgba(63,182,168,.6)"></span>Up to date</div>
+          </div>
+          <div dir="{{ passage.dir }}" lang="{{ passage.lang }}" style="{{ passage.style }}">
+            <sc-for list="{{ passage.verses }}" as="v" hint-placeholder-count="3"><span><span style="font:var(--type-overline);letter-spacing:0;color:var(--text-dim);vertical-align:super;margin-inline:2px 4px">{{ v.n }}</span>{{ v.text }}</span></sc-for>
+          </div>
+          <div style="margin-top:10px;font:var(--type-caption);color:var(--text-dim)">{{ passage.src }}</div>
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;position:relative">
+            <span style="font:var(--type-caption);color:var(--text-muted)">Key terms</span>
+            <sc-for list="{{ keyTerms }}" as="k" hint-placeholder-count="3"><button onClick="{{ k.select }}" style="{{ k.style }}">{{ k.label }}</button></sc-for>
+            <sc-if value="{{ termOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;left:0;bottom:calc(100% + 10px);width:min(320px,100%);padding:14px 16px;border-radius:var(--r-lg);background:var(--material-floating);backdrop-filter:blur(var(--blur-heavy)) var(--sat-glass);border:var(--border-glass);box-shadow:var(--shadow-float),var(--inner-top);animation:gg-rise 420ms var(--ease-swell) both;z-index:2" data-comment-anchor="9c46bf027c-div">
+                <div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Key term · {{ term.source }}</div>
+                <div style="margin-top:4px;font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">{{ term.label }}</div>
+                <p style="margin:6px 0 0;font:var(--type-caption);color:var(--text-body);text-wrap:pretty">{{ term.def }}</p>
+                <div style="margin-top:10px;display:flex;gap:8px"><span style="padding:7px 12px;border-radius:999px;background:var(--surface-inverse);color:var(--text-on-inverse);font:var(--fw-semibold) 11px/1 var(--font-core);white-space:nowrap">Open in glossary</span><button onClick="{{ closeTerm }}" style="padding:7px 12px;border-radius:999px;background:var(--glass-fill-3);border:var(--border-glass);color:var(--text-title);font:var(--fw-semibold) 11px/1 var(--font-core);cursor:pointer">Close</button></div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">ReviewThread</div><div style="font:var(--type-caption);color:var(--text-muted);margin-top:2px">Anchored to a verse. Role as overline, time as caption. Resolving softens the thread instead of hiding it.</div>
+      <div style="margin-top:14px;padding:18px;border-radius:var(--r-lg);background:var(--aurora-field)">
+        <div style="{{ threadStyle }}">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:var(--type-caption);color:var(--text-muted)">Ruth 2:3 · 2 comments</span><span style="{{ resolvedChip }}">{{ resolvedLabel }}</span></div>
+          <sc-for list="{{ comments }}" as="c" hint-placeholder-count="2">
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <span style="width:32px;height:32px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--glass-fill-3);border:var(--border-glass);font:var(--fw-semibold) 11px/1 var(--font-core);color:var(--text-title)">{{ c.initials }}</span>
+              <div style="min-width:0"><div style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap"><span style="font:var(--fw-semibold) 13px/1.2 var(--font-core);color:var(--text-title)">{{ c.name }}</span><span style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">{{ c.role }}</span><span style="font:var(--type-caption);color:var(--text-dim)">{{ c.when }}</span></div><p style="margin:4px 0 0;font:var(--type-caption);color:var(--text-body);text-wrap:pretty">{{ c.text }}</p></div>
+            </div>
+          </sc-for>
+          <div style="display:flex;gap:8px;align-items:center"><div style="flex:1;display:flex;align-items:center;height:40px;padding:0 14px;border-radius:999px;background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--inner-top);font:var(--type-caption);color:var(--text-dim)">Reply</div><button onClick="{{ toggleResolved }}" style="height:40px;padding:0 14px;border-radius:999px;border:var(--border-glass);background:var(--glass-fill-3);font:var(--fw-semibold) 12px/1 var(--font-core);color:var(--text-title);cursor:pointer;box-shadow:var(--shadow-rest),var(--inner-top)">{{ resolveBtn }}</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">ProgressGrid</div><div style="font:var(--type-caption);color:var(--text-muted);margin-top:2px">Book by chapter. Stage is an aurora tint on a 6px cell: sky Understand, peach Translate, lavender Revise and check, mint done. Empty cells are fill 1. Stage names are per process; this is one ladder.</div>
+      <div style="margin-top:14px;padding:18px;border-radius:var(--r-lg);background:var(--aurora-field)">
+        <div style="padding:14px 16px;border-radius:var(--r-lg);background:var(--glass-fill-3);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top);display:grid;gap:8px">
+          <sc-for list="{{ progress }}" as="b" hint-placeholder-count="5">
+            <div style="display:grid;grid-template-columns:82px minmax(0,1fr) 44px;gap:10px;align-items:center"><span style="font:var(--type-label);color:var(--text-title)">{{ b.book }}</span><div style="display:flex;gap:3px;flex-wrap:wrap"><sc-for list="{{ b.cells }}" as="c" hint-placeholder-count="8"><span title="{{ c.title }}" style="{{ c.style }}"></span></sc-for></div><span style="font:11px var(--font-mono);color:var(--text-dim);text-align:right">{{ b.pct }}</span></div>
+          </sc-for>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:4px;font:var(--type-caption);color:var(--text-muted)"><span style="display:flex;gap:6px;align-items:center"><span style="width:10px;height:10px;border-radius:3px;background:var(--aurora-sky)"></span>Understand</span><span style="display:flex;gap:6px;align-items:center"><span style="width:10px;height:10px;border-radius:3px;background:var(--aurora-peach)"></span>Translate</span><span style="display:flex;gap:6px;align-items:center"><span style="width:10px;height:10px;border-radius:3px;background:var(--aurora-lavender)"></span>Revise and check</span><span style="display:flex;gap:6px;align-items:center"><span style="width:10px;height:10px;border-radius:3px;background:var(--aurora-mint)"></span>Done</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">SurveyQuestion</div><div style="font:var(--type-caption);color:var(--text-muted);margin-top:2px">3D Review. Bands, not scores: four pills with a jar-fill mark, a single hue. One question per screen, perspective as overline. Free-text is optional and comes after.</div>
+      <div style="margin-top:14px;padding:18px;border-radius:var(--r-lg);background:var(--aurora-field)">
+        <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-3);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge)">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted);white-space:nowrap">Community · 3 of 8</span><span style="font:var(--type-caption);color:var(--text-dim)">Illustrative</span></div>
+          <div style="margin-top:8px;font:var(--type-card-title);letter-spacing:var(--ls-title);color:var(--text-title);text-wrap:pretty">When the team reads a new draft aloud, how well does your community follow it?</div>
+          <div style="margin-top:16px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+            <sc-for list="{{ bands }}" as="b" hint-placeholder-count="4"><button onClick="{{ b.select }}" style="{{ b.style }}"><span style="{{ b.jar }}"><span style="{{ b.fill }}"></span></span><span>{{ b.label }}</span></button></sc-for>
+          </div>
+          <div style="margin-top:12px;display:flex;align-items:center;height:44px;padding:0 16px;border-radius:999px;background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--inner-top);font:var(--type-caption);color:var(--text-dim)">Anything you want to add? Optional.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">ResourceCard · SyncBadge</div><div style="font:var(--type-caption);color:var(--text-muted);margin-top:2px">Aquifer or Door43 item: type as overline chip on the image, title, then source · id · licence. Specimens are live Aquifer records. SyncBadge has three states and lives top-right of any card that can be stale.</div>
+      <div style="margin-top:14px;padding:18px;border-radius:var(--r-lg);background:var(--aurora-field);display:grid;gap:12px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px">
+          <sc-for list="{{ resources }}" as="r" hint-placeholder-count="3">
+            <div style="border-radius:var(--r-lg);overflow:hidden;background:var(--glass-fill-3);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top)">
+              <div style="{{ r.imgStyle }}"><span style="position:absolute;left:8px;top:8px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.85);font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--ink-900)">{{ r.type }}</span></div>
+              <div style="padding:10px 12px 12px"><div style="font:var(--fw-semibold) 13px/1.2 var(--font-core);color:var(--text-title)">{{ r.title }}</div><div style="margin-top:3px;font:var(--type-caption);color:var(--text-muted)">{{ r.meta }}</div></div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <div style="{{ syncStyles.ok }}"><span style="width:7px;height:7px;border-radius:50%;background:var(--accent-teal);box-shadow:0 0 6px rgba(63,182,168,.6)"></span>Up to date</div>
+          <div style="{{ syncStyles.syncing }}"><span style="width:7px;height:7px;border-radius:50%;background:var(--text-muted);animation:gg-breathe 1.6s var(--ease-liquid) infinite"></span>Syncing 3 items</div>
+          <div style="{{ syncStyles.offline }}"><span style="width:7px;height:7px;border-radius:50%;border:1px dashed var(--text-muted);box-sizing:border-box"></span>Offline · saved on device</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">GlassTabBar</div><div style="font:var(--type-caption);color:var(--text-muted);margin-top:2px">Floating pill, fill 3, strong blur. Active item gets a solid pill and its title; the rest are glyph only. Apps pick their own four.</div>
+      <div style="margin-top:14px;padding:38px 18px 18px;border-radius:var(--r-lg);background:var(--aurora-field);display:grid;place-items:end center">
+        <div style="display:flex;gap:4px;padding:6px;border-radius:999px;background:var(--glass-fill-3);border:var(--border-glass);backdrop-filter:blur(var(--blur-strong)) var(--sat-glass);box-shadow:var(--shadow-float),var(--inner-top)">
+          <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+            <button onClick="{{ t.select }}" style="{{ t.style }}"><x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.Icon" name="{{ t.icon }}" size="{{ 18 }}" hint-size="18px,18px"></x-import><sc-if value="{{ t.active }}" hint-placeholder-val="{{ false }}"><span>{{ t.label }}</span></sc-if></button>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">GlassSheet</div><div style="font:var(--type-caption);color:var(--text-muted);margin-top:2px">Fill 4, heavy blur, 34px top radius. Content behind recedes: scale .94, blur 6px, opacity .5.</div></div><button onClick="{{ toggleSheet }}" style="padding:6px 14px;border-radius:999px;border:var(--border-glass);background:var(--glass-fill-3);font:var(--fw-semibold) 11px/1 var(--font-core);color:var(--text-title);cursor:pointer;box-shadow:var(--shadow-rest),var(--inner-top);flex:none">{{ sheetBtn }}</button></div>
+      <div style="margin-top:14px;position:relative;height:270px;border-radius:var(--r-lg);background:var(--aurora-field);overflow:hidden">
+        <div style="{{ sheetBehind }}">
+          <div style="font:var(--type-caption);color:var(--text-muted)">River project</div>
+          <div style="margin-top:4px;font:var(--type-card-title);letter-spacing:var(--ls-title);color:var(--text-title)">River assessment</div>
+          <div style="margin-top:14px;height:64px;border-radius:var(--r-lg);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-rest),var(--inner-top)"></div>
+        </div>
+        <div style="{{ sheetStyle }}">
+          <span style="width:36px;height:4px;border-radius:2px;background:var(--text-faint);margin:0 auto;display:block"></span>
+          <div style="margin-top:14px;font:var(--type-card-title);letter-spacing:var(--ls-title);color:var(--text-title)">Invite a collaborator</div>
+          <div style="margin-top:4px;font:var(--type-caption);color:var(--text-muted)">Collaborators can open the workspace. Survey participants only need the survey link.</div>
+          <div style="margin-top:14px;display:flex;gap:8px"><span style="flex:1;padding:12px;text-align:center;border-radius:999px;background:var(--surface-inverse);color:var(--text-on-inverse);font:var(--fw-semibold) 13px/1 var(--font-core)">Copy invite link</span><span style="flex:1;padding:12px;text-align:center;border-radius:999px;background:var(--glass-fill-3);border:var(--border-glass);color:var(--text-title);font:var(--fw-semibold) 13px/1 var(--font-core)">Open workspace access</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">Form fields</div><div style="font:var(--type-caption);color:var(--text-muted);margin-top:2px">GlassField · GlassSelect · GlassToggle · GlassSegmented. Labels are caption-size above; focus is a glow, never a ring.</div>
+      <div style="margin-top:14px;padding:18px;border-radius:var(--r-lg);background:var(--aurora-field);display:grid;gap:12px">
+        <label style="display:grid;gap:6px"><span style="font:var(--type-caption);color:var(--text-muted);padding-left:14px">Assessment name</span><input value="River assessment" style="height:48px;padding:0 18px;border-radius:999px;background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-rest),var(--inner-top);font:var(--type-body);color:var(--text-title);outline:none;transition:var(--t-hover)" style-focus="box-shadow:var(--shadow-rest),var(--inner-top),var(--glow-focus)"></label>
+        <label style="display:grid;gap:6px"><span style="font:var(--type-caption);color:var(--text-muted);padding-left:14px">Perspective</span><span style="display:flex;align-items:center;justify-content:space-between;height:48px;padding:0 14px 0 18px;border-radius:999px;background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-rest),var(--inner-top);font:var(--type-body);color:var(--text-title)"><span>Community</span><x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.Icon" name="chevronRight" size="{{ 16 }}" color="var(--text-dim)" style="transform:rotate(90deg)" hint-size="16px,16px"></x-import></span></label>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 4px 0 14px"><span style="font:var(--type-label);color:var(--text-title)">Allow a viewer link</span><button onClick="{{ toggleSwitch }}" aria-label="Toggle" style="{{ switchStyle }}"><span style="{{ switchKnob }}"></span></button></div>
+        <div style="display:flex;padding:4px;border-radius:999px;background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--inner-top)">
+          <sc-for list="{{ segments }}" as="s" hint-placeholder-count="4"><button onClick="{{ s.select }}" style="{{ s.style }}">{{ s.label }}</button></sc-for>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">GlassSearch + FilterChips</div><div style="font:var(--type-caption);color:var(--text-muted);margin-top:2px">Aquifer Window. Search reuses GlassInput with a leading glyph. Selected chips invert; the row bleeds off the edge.</div>
+      <div style="margin-top:14px;padding:18px 0 18px 18px;border-radius:var(--r-lg);background:var(--aurora-field);display:grid;gap:10px;overflow:hidden">
+        <div style="margin-right:18px;display:flex;align-items:center;gap:12px;height:52px;padding:0 20px;border-radius:999px;background:var(--glass-fill-2);border:var(--border-glass);backdrop-filter:blur(var(--blur-strong)) var(--sat-glass);box-shadow:var(--shadow-rest),var(--inner-top)"><x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.Icon" name="search" size="{{ 18 }}" color="var(--text-muted)" hint-size="18px,18px"></x-import><input placeholder="Search resources for Ruth 2" style="flex:1;min-width:0;border:none;outline:none;background:transparent;font:var(--type-body);color:var(--text-title)"></div>
+        <div style="display:flex;gap:8px;overflow:hidden">
+          <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5"><button onClick="{{ f.toggle }}" style="{{ f.style }}">{{ f.label }}</button></sc-for>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass);grid-column:1/-1">
+      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline"><div><div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">CatalogRow · Door43</div><div style="font:var(--type-caption);color:var(--text-muted);margin-top:2px">The same browse pattern the Aquifer Window uses, pointed at the Door43 catalog. Subject as overline, title in the resource's own script and direction, owner/repo in mono, release as chip. Rows group by language; RTL titles align end.</div></div>
+        <div style="display:flex;padding:4px;border-radius:999px;background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--inner-top)"><sc-for list="{{ catalogSources }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.select }}" style="{{ t.style }}">{{ t.label }}</button></sc-for></div></div>
+      <div style="margin-top:14px;padding:18px;border-radius:var(--r-lg);background:var(--aurora-field)">
+        <div style="border-radius:var(--r-xl);background:var(--glass-fill-3);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);overflow:hidden">
+          <sc-for list="{{ catalog }}" as="c" hint-placeholder-count="6">
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px 16px;border-top:var(--border-hairline)">
+              <div style="min-width:0"><div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">{{ c.subject }}</div><div dir="{{ c.dir }}" lang="{{ c.lang }}" style="{{ c.titleStyle }}">{{ c.title }}</div><div style="margin-top:3px;font:11px/1.3 var(--font-mono);color:var(--text-dim)">{{ c.id }}</div></div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex:none"><span style="padding:4px 9px;border-radius:999px;background:var(--glass-fill-2);border:var(--border-glass);font:var(--fw-medium) 10px/1.1 var(--font-mono);color:var(--text-title)">{{ c.release }}</span><span style="font:var(--type-caption);color:var(--text-dim)">{{ c.meta }}</span></div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin-top:10px;font:var(--type-caption);color:var(--text-dim)">{{ catalogNote }}</div>
+      </div>
+    </div>
+
+    <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass);grid-column:1/-1">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">Desktop shell · 3D Review</div><div style="font:var(--type-caption);color:var(--text-muted);margin-top:2px">Context side panel (projects and their assessments), four phases across the top of the assessment, a grid of report cards. Viewer and participant routes drop the side panel entirely.</div>
+      <div style="margin-top:14px;border-radius:var(--r-lg);background:var(--aurora-field);overflow:hidden;display:grid;grid-template-columns:210px minmax(0,1fr);min-height:440px">
+        <div style="padding:20px 14px;background:var(--glass-fill-1);border-right:var(--border-glass-soft);display:flex;flex-direction:column;gap:14px">
+          <div style="font:var(--fw-medium) 14px/1.2 var(--font-core);letter-spacing:-0.045em;color:var(--text-title);padding:0 6px">3D Review</div>
+          <div style="display:flex;align-items:center;gap:8px;height:36px;padding:0 12px;border-radius:999px;background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--inner-top);font:var(--type-caption);color:var(--text-muted)"><x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.Icon" name="plus" size="{{ 14 }}" hint-size="14px,14px"></x-import>New assessment</div>
+          <div style="display:grid;gap:2px">
+            <div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-dim);padding:6px 8px 4px">River project</div>
+            <div style="padding:7px 8px;border-radius:var(--r-xs);background:var(--glass-fill-3);font:var(--type-caption);color:var(--text-title);display:flex;justify-content:space-between;gap:6px"><span>River assessment</span><span style="color:var(--text-dim)">Prepare</span></div>
+            <div style="padding:7px 8px;border-radius:var(--r-xs);font:var(--type-caption);color:var(--text-body);display:flex;justify-content:space-between;gap:6px"><span>Earlier assessment</span><span style="color:var(--text-dim)">Understand</span></div>
+            <div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-dim);padding:10px 8px 4px">Hill project</div>
+            <div style="padding:7px 8px;border-radius:var(--r-xs);font:var(--type-caption);color:var(--text-muted)">No assessments yet</div>
+            <div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-dim);padding:10px 8px 4px">All projects</div>
+            <div style="padding:7px 8px;border-radius:var(--r-xs);font:var(--type-caption);color:var(--text-body)">Organize in a workspace</div>
+          </div>
+        </div>
+        <div style="padding:24px;display:flex;flex-direction:column;gap:14px;min-width:0">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div style="flex:none;white-space:nowrap"><div style="font:var(--type-caption);color:var(--text-muted)">River project</div><div style="font:var(--type-card-title);letter-spacing:var(--ls-title);color:var(--text-title)">River assessment</div></div>
+            <div style="display:flex;padding:4px;border-radius:999px;background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--inner-top)"><sc-for list="{{ phases }}" as="p" hint-placeholder-count="4"><button onClick="{{ p.select }}" style="{{ p.style }}">{{ p.label }}</button></sc-for></div></div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;flex:1">
+            <div style="padding:16px;border-radius:var(--r-lg);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)"><div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Responses</div><div style="margin-top:8px;display:grid;gap:6px;font:var(--type-caption);color:var(--text-body)"><div style="display:flex;justify-content:space-between"><span>Translator</span><span style="font:var(--fw-semibold) 13px var(--font-numeric);color:var(--text-title)">12</span></div><div style="display:flex;justify-content:space-between"><span>Community</span><span style="font:var(--fw-semibold) 13px var(--font-numeric);color:var(--text-title)">8</span></div><div style="display:flex;justify-content:space-between"><span>Church</span><span style="font:var(--fw-semibold) 13px var(--font-numeric);color:var(--text-title)">5</span></div><div style="display:flex;justify-content:space-between"><span>Consultant</span><span style="font:var(--fw-semibold) 13px var(--font-numeric);color:var(--text-title)">1</span></div></div></div>
+            <div style="padding:16px;border-radius:var(--r-lg);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)"><div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Quality band · simple</div><div style="margin-top:10px;display:flex;align-items:flex-end;gap:10px"><span style="width:28px;height:40px;border-radius:6px 6px 10px 10px;border:1.2px solid var(--text-dim);position:relative;overflow:hidden"><span style="position:absolute;left:0;right:0;bottom:0;height:62%;background:var(--aurora-mint)"></span></span><div><div style="font:var(--fw-semibold) 20px/1.1 var(--font-core);letter-spacing:-.02em;color:var(--text-title)">Growing</div><div style="font:var(--type-caption);color:var(--text-muted)">Detailed view available</div></div></div></div>
+            <div style="padding:16px;border-radius:var(--r-lg);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)"><div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Reflection</div><p style="margin:8px 0 0;font:var(--type-caption);color:var(--text-body);text-wrap:pretty">Community follows the drafts when they are read aloud; written copies are harder. Discuss with the team before the next round.</p></div>
+            <div style="padding:16px;border-radius:var(--r-lg);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)"><div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Next steps</div><div style="margin-top:8px;display:grid;gap:6px;font:var(--type-caption);color:var(--text-body)"><span>Open viewer link for church leaders</span><span>Invite a consultant</span><span>Repeat when it is appropriate</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="language" data-screen-label="LanguagePicker" style="display:flex;flex-direction:column;gap:18px">
+  <div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Library · Bible Translation</div>
+  <h2 style="margin:0;font:var(--type-hero);letter-spacing:var(--ls-hero);color:var(--text-title)">LanguagePicker</h2>
+  <p style="margin:0;max-width:660px;text-wrap:pretty">One picker for every place a language is chosen: the app's own locale, a filter on resources, an attribute on a project or passage, the target of a translation, or a gateway pair. Thousands of languages, so the list is never browsed cold: a Suggested group comes first (recent, then this person's project languages, then the device locale, then gateway languages), and typing matches autonym, English name, code, region and alternate names. Every row carries coverage per resource type in three states, and the row itself never lies about what exists.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px">
+    <div style="padding:14px 16px;border-radius:var(--r-lg);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-rest),var(--inner-top)"><div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Universe by context</div><div style="margin-top:6px;font:var(--type-caption);color:var(--text-body);text-wrap:pretty"><strong style="color:var(--text-title)">Filter</strong> hides languages with nothing in the current source. <strong style="color:var(--text-title)">Attribute, target, pair</strong> show every language; empty ones read “no resources yet” and stay selectable. <strong style="color:var(--text-title)">UI locale</strong> shows every language; ones the app is not localized in fall back to a gateway language with a note.</div></div>
+    <div style="padding:14px 16px;border-radius:var(--r-lg);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-rest),var(--inner-top)"><div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Coverage, per resource type</div><div style="margin-top:6px;font:var(--type-caption);color:var(--text-body);text-wrap:pretty">Chips for Bible · Notes · Words · Maps light up per language. <strong style="color:var(--text-title)">Available</strong> is a filled chip. <strong style="color:var(--text-title)">AI-translatable</strong> is the chip with an AI tag: a resource an LLM handles well that can be produced on demand. <strong style="color:var(--text-title)">None</strong> is a dashed hairline. AI is one rung on a confidence ladder (draft, checked, published) that resource metadata will carry later; the mark is designed to grow into that ladder.</div></div>
+    <div style="padding:14px 16px;border-radius:var(--r-lg);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-rest),var(--inner-top)"><div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Row and data</div><div style="margin-top:6px;font:var(--type-caption);color:var(--text-body);text-wrap:pretty">Autonym first in its own script and direction, English name, then code in mono. List is the union of Door43 <span style="font-family:var(--font-mono)">/languages</span> and Aquifer localizations, keyed by BCP-47. Sorted by English name after the Suggested group, since autonyms cannot share one alphabet. Sheet on mobile, popover on desktop, same rows.</div></div>
+  </div>
+  <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+    <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span style="font:var(--type-caption);color:var(--text-muted)">Context</span><div style="display:flex;padding:4px;border-radius:999px;background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--inner-top)"><sc-for list="{{ lpContexts }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.select }}" style="{{ c.style }}">{{ c.label }}</button></sc-for></div></div>
+      <div style="display:flex;padding:4px;border-radius:999px;background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--inner-top)"><sc-for list="{{ lpSurfaces }}" as="c" hint-placeholder-count="2"><button onClick="{{ c.select }}" style="{{ c.style }}">{{ c.label }}</button></sc-for></div>
+    </div>
+    <div style="margin-top:14px;padding:24px;border-radius:var(--r-lg);background:var(--aurora-field);display:grid;place-items:center;min-height:520px">
+      <div style="{{ lpFrame }}">
+        <sc-if value="{{ lpIsSheet }}" hint-placeholder-val="{{ false }}"><span style="width:36px;height:4px;border-radius:2px;background:var(--text-faint);margin:0 auto 12px;display:block"></span></sc-if>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><div style="font:var(--type-card-title);letter-spacing:var(--ls-title);color:var(--text-title)">{{ lpTitle }}</div><span style="font:var(--type-caption);color:var(--text-dim)">{{ lpCount }}</span></div>
+        <div style="margin-top:12px;display:flex;align-items:center;gap:10px;height:44px;padding:0 16px;border-radius:999px;background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--inner-top)" style-focus="box-shadow:var(--inner-top),var(--glow-focus)"><x-import component-from-global-scope="GenerativeGlassDesignSystem_1a4c8e.Icon" name="search" size="{{ 16 }}" color="var(--text-muted)" hint-size="16px,16px"></x-import><input value="{{ lpQuery }}" onChange="{{ lpType }}" placeholder="Name, autonym, code or region" style="flex:1;min-width:0;border:none;outline:none;background:transparent;font:var(--type-label);color:var(--text-title)"><sc-if value="{{ lpHasQuery }}" hint-placeholder-val="{{ false }}"><button onClick="{{ lpClear }}" style="border:none;background:transparent;cursor:pointer;font:var(--type-caption);color:var(--text-muted);padding:0">Clear</button></sc-if></div>
+        <div style="margin-top:12px;display:grid;gap:2px;max-height:360px;overflow:auto;padding-right:2px">
+          <sc-for list="{{ lpGroups }}" as="g" hint-placeholder-count="2">
+            <div style="padding:10px 12px 4px;font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-dim)">{{ g.label }}</div>
+            <sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="5">
+              <button onClick="{{ r.select }}" style="{{ r.style }}">
+                <span style="display:flex;flex-direction:column;gap:2px;min-width:0;text-align:start">
+                  <span style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap"><span dir="{{ r.dir }}" lang="{{ r.code }}" style="{{ r.autoStyle }}">{{ r.autonym }}</span><span style="font:var(--type-caption);color:var(--text-muted)">{{ r.english }}</span><span style="font:10px/1.2 var(--font-mono);color:var(--text-dim)">{{ r.code }}</span></span>
+                  <span style="font:var(--type-caption);color:var(--text-dim)">{{ r.note }}</span>
+                </span>
+                <span style="display:flex;gap:4px;flex:none;align-items:center">
+                  <sc-for list="{{ r.cov }}" as="c" hint-placeholder-count="4"><span title="{{ c.title }}" style="{{ c.style }}">{{ c.label }}<sc-if value="{{ c.ai }}" hint-placeholder-val="{{ false }}"><span style="margin-inline-start:4px;padding:1px 4px;border-radius:999px;background:var(--surface-inverse);color:var(--text-on-inverse);font:var(--fw-semibold) 8px/1.1 var(--font-core);letter-spacing:.04em">AI</span></sc-if></span></sc-for>
+                </span>
+              </button>
+            </sc-for>
+          </sc-for>
+          <sc-if value="{{ lpEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:24px 12px;text-align:center;font:var(--type-caption);color:var(--text-muted);text-wrap:pretty">{{ lpEmptyText }}</div></sc-if>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:14px;flex-wrap:wrap;font:var(--type-caption);color:var(--text-dim);padding:0 4px"><span style="display:flex;gap:6px;align-items:center"><span style="width:14px;height:10px;border-radius:3px;background:var(--glass-fill-4);border:var(--border-glass)"></span>Available</span><span style="display:flex;gap:6px;align-items:center"><span style="padding:1px 4px;border-radius:999px;background:var(--surface-inverse);color:var(--text-on-inverse);font:var(--fw-semibold) 8px/1.1 var(--font-core)">AI</span>AI-translatable</span><span style="display:flex;gap:6px;align-items:center"><span style="width:14px;height:10px;border-radius:3px;border:1px dashed var(--text-dim);box-sizing:border-box"></span>None</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="generative" data-screen-label="Generative rules" style="display:flex;flex-direction:column;gap:18px">
+  <div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Generative</div>
+  <h2 style="margin:0;font:var(--type-hero);letter-spacing:var(--ls-hero);color:var(--text-title)">Generative rules</h2>
+  <p style="margin:0;max-width:640px">The aurora is seeded by scripture: testament sets the hue family, genre sets the blob layout. The glass is parametric: passage length sets fill, script sets blur, process stage tints the sheen, nesting depth steps the radius. Every output snaps to a ladder step, so the result is always a token, never an arbitrary value.</p>
+  <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:22px">
+    <div style="display:grid;gap:16px;align-content:start">
+      <div style="display:grid;gap:8px"><div style="font:var(--fw-semibold) var(--fs-label)/1.2 var(--font-core);color:var(--text-title)">Testament → hue family</div>
+        <div style="display:flex;padding:4px;border-radius:999px;background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--inner-top)"><sc-for list="{{ testaments }}" as="c" hint-placeholder-count="2"><button onClick="{{ c.select }}" style="{{ c.style }}">{{ c.label }}</button></sc-for></div></div>
+      <div style="display:grid;gap:8px"><div style="font:var(--fw-semibold) var(--fs-label)/1.2 var(--font-core);color:var(--text-title)">Genre → blob layout</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ genres }}" as="c" hint-placeholder-count="7"><button onClick="{{ c.select }}" style="{{ c.style }}">{{ c.label }}</button></sc-for></div>
+        <div style="font:var(--type-caption);color:var(--text-muted)">{{ genreNote }}</div></div>
+      <div style="display:grid;gap:8px"><div style="font:var(--fw-semibold) var(--fs-label)/1.2 var(--font-core);color:var(--text-title)">Script → blur</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ gScripts }}" as="c" hint-placeholder-count="5"><button onClick="{{ c.select }}" style="{{ c.style }}">{{ c.label }}</button></sc-for></div></div>
+      <div style="display:grid;gap:8px"><div style="font:var(--fw-semibold) var(--fs-label)/1.2 var(--font-core);color:var(--text-title)">Stage → sheen tint</div>
+        <div style="display:flex;padding:4px;border-radius:999px;background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--inner-top)"><sc-for list="{{ stages }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.select }}" style="{{ c.style }}">{{ c.label }}</button></sc-for></div></div>
+      <label style="display:grid;gap:6px"><span style="display:flex;justify-content:space-between;font:var(--type-caption);color:var(--text-muted)"><span>Passage length → fill opacity</span><span style="font:11px var(--font-mono)">{{ gFillLabel }}</span></span><input type="range" min="1" max="40" step="1" value="{{ verses }}" onChange="{{ setVerses }}" style="width:100%"></label>
+      <label style="display:grid;gap:6px"><span style="display:flex;justify-content:space-between;font:var(--type-caption);color:var(--text-muted)"><span>Nesting depth → radius</span><span style="font:11px var(--font-mono)">{{ gRadiusLabel }}</span></span><input type="range" min="0" max="3" step="1" value="{{ depth }}" onChange="{{ setDepth }}" style="width:100%"></label>
+      <pre style="margin:0;font:11px/1.5 var(--font-mono);color:var(--text-muted);background:var(--glass-fill-1);border:var(--border-hairline);border-radius:var(--r-sm);padding:10px 12px;overflow:auto;white-space:pre-wrap">{{ gCss }}</pre>
+      <button onClick="{{ copy }}" data-code="{{ gCss }}" style="justify-self:start;padding:8px 14px;border-radius:999px;border:var(--border-glass);background:var(--glass-fill-3);font:var(--fw-semibold) 12px/1 var(--font-core);color:var(--text-title);cursor:pointer;box-shadow:var(--shadow-rest),var(--inner-top)">Copy CSS</button>
+    </div>
+    <div style="position:relative;min-height:460px;border-radius:var(--r-lg);overflow:hidden;background:var(--surface-app)">
+      <div aria-hidden="true" style="{{ gAuroraStyle }}"></div>
+      <div style="position:absolute;inset:0;display:grid;place-items:center;padding:28px">
+        <div style="{{ gCardStyle }}">
+          <span aria-hidden="true" style="{{ gSheenStyle }}"></span>
+          <div style="position:relative;padding:18px 20px 20px">
+            <div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap"><div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted);white-space:nowrap">{{ gEyebrow }}</div><div style="font:var(--type-caption);color:var(--text-dim);flex:none;white-space:nowrap">{{ gStageLabel }}</div></div>
+            <div style="margin-top:6px;font:var(--type-card-title);letter-spacing:var(--ls-title);color:var(--text-title)">{{ gTitle }}</div>
+            <div dir="{{ gDir }}" lang="{{ gLang }}" style="{{ gBodyStyle }}">{{ gBody }}</div>
+            <sc-if value="{{ gNested }}" hint-placeholder-val="{{ false }}"><div style="{{ gNestStyle }}"><div style="font:var(--type-caption);color:var(--text-muted)">Nested surface · radius {{ gNestRadius }}</div></div></sc-if>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
+    <div style="padding:14px 16px;border-radius:var(--r-lg);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-rest),var(--inner-top)"><div style="font:var(--fw-semibold) var(--fs-label)/1.2 var(--font-core);color:var(--text-title)">Rule 1 · Aurora from scripture</div><p style="margin:6px 0 0;font:var(--type-caption);color:var(--text-muted)">Old Testament: sky and lavender, cool. New Testament: peach and lemon, warm. Genre places the blobs: Law is a steady horizon, Poetry pools low, Prophecy rises, Gospel centers, Epistle spreads evenly, Apocalyptic is high and asymmetric.</p></div>
+    <div style="padding:14px 16px;border-radius:var(--r-lg);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-rest),var(--inner-top)"><div style="font:var(--fw-semibold) var(--fs-label)/1.2 var(--font-core);color:var(--text-title)">Rule 2 · Fill from length</div><p style="margin:6px 0 0;font:var(--type-caption);color:var(--text-muted)">Scripture never sits below fill 3. Up to 8 verses: fill 3. Longer: fill 4. UI cards keep the full ladder from fill 1.</p></div>
+    <div style="padding:14px 16px;border-radius:var(--r-lg);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-rest),var(--inner-top)"><div style="font:var(--fw-semibold) var(--fs-label)/1.2 var(--font-core);color:var(--text-title)">Rule 3 · Blur from script</div><p style="margin:6px 0 0;font:var(--type-caption);color:var(--text-muted)">Scripts with diacritics, points or conjuncts need a calmer ground. Latin: medium. Greek: medium. Hebrew with points, Arabic: strong. Devanagari: strong. Any script at caption size: heavy.</p></div>
+    <div style="padding:14px 16px;border-radius:var(--r-lg);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-rest),var(--inner-top)"><div style="font:var(--fw-semibold) var(--fs-label)/1.2 var(--font-core);color:var(--text-title)">Rule 4 · Sheen from stage, radius from depth</div><p style="margin:6px 0 0;font:var(--type-caption);color:var(--text-muted)">Understand tints the refraction sky, Translate peach, Revise and check lavender. Stage names are per process. Each nesting level steps the radius 28 → 22 → 18 → 14; two glass levels max.</p></div>
+  </div>
+</section>
+
+<section id="projects" data-screen-label="Project constellation" style="display:flex;flex-direction:column;gap:18px">
+  <div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Generative · concept</div>
+  <h2 style="margin:0;font:var(--type-hero);letter-spacing:var(--ls-hero);color:var(--text-title)">Project constellation</h2>
+  <p style="margin:0;max-width:640px">A partner's projects as a drifting field instead of a list. Each project is a glass orb whose inner aurora is generated from its state. Clusters sit where their region is: orbs are placed on a Natural Earth projection, and a hairline world outline can be drawn under them or switched off. Click a region name to zoom to it, World to return. For a coordinator with forty projects this is the home screen; for a translator with one it is a single orb.</p>
+  <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass);display:grid;grid-template-columns:minmax(0,1.6fr) minmax(220px,.8fr);gap:18px">
+    <div style="position:relative;aspect-ratio:5/3;border-radius:var(--r-lg);overflow:hidden;background:var(--surface-app)">
+      <div aria-hidden="true" style="position:absolute;inset:-18%;background:var(--aurora-field);filter:blur(28px);opacity:.7"></div>
+      <div style="{{ fieldZoom }}">
+        <sc-if value="{{ mapOn }}" hint-placeholder-val="{{ true }}"><div aria-hidden="true" style="position:absolute;inset:0;color:var(--text-title);opacity:.55"><x-import component-from-global-scope="gg-world-outline" hint-size="100%,100%"></x-import></div></sc-if>
+        <sc-for list="{{ clusters }}" as="cl" hint-placeholder-count="4"><button onClick="{{ cl.select }}" style="{{ cl.style }}">{{ cl.label }}</button></sc-for>
+        <sc-for list="{{ sessions }}" as="s" hint-placeholder-count="14">
+          <button onClick="{{ s.select }}" title="{{ s.title }}" style="{{ s.style }}">
+            <span aria-hidden="true" style="{{ s.inner }}"></span>
+            <span aria-hidden="true" style="{{ s.photo }}"></span>
+            <span aria-hidden="true" style="position:absolute;inset:0;border-radius:50%;background:var(--refraction);opacity:.7"></span>
+          </button>
+        </sc-for>
+      </div>
+      <div style="position:absolute;left:12px;bottom:12px;display:flex;gap:6px;padding:4px;border-radius:999px;background:var(--glass-fill-3);border:var(--border-glass);backdrop-filter:blur(var(--blur-strong)) var(--sat-glass);box-shadow:var(--shadow-rest),var(--inner-top)">
+        <button onClick="{{ toggleMap }}" style="{{ mapBtn }}">{{ mapLabel }}</button>
+        <sc-if value="{{ zoomed }}" hint-placeholder-val="{{ false }}"><button onClick="{{ zoomOut }}" style="{{ worldBtn }}">World</button></sc-if>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="padding:16px;border-radius:var(--r-lg);background:var(--glass-fill-3);border:var(--border-glass);box-shadow:var(--shadow-rest),var(--inner-top)">
+        <div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">{{ sel.topic }} · {{ sel.status }}</div>
+        <div style="margin-top:6px;font:var(--type-card-title);letter-spacing:var(--ls-title);color:var(--text-title)">{{ sel.title }}</div>
+        <div style="margin-top:6px;font:var(--type-caption);color:var(--text-muted)">{{ sel.when }} · {{ sel.turns }} books in progress · {{ sel.mood }}</div>
+        <div style="margin-top:12px;display:flex;gap:8px"><span style="padding:8px 14px;border-radius:999px;background:var(--surface-inverse);color:var(--text-on-inverse);font:var(--fw-semibold) 12px/1 var(--font-core)">Open</span><span style="padding:8px 14px;border-radius:999px;background:var(--glass-fill-3);border:var(--border-glass);color:var(--text-title);font:var(--fw-semibold) 12px/1 var(--font-core)">Assessments</span></div>
+      </div>
+      <div style="display:grid;gap:8px;font:var(--type-caption);color:var(--text-muted)">
+        <div style="font:var(--fw-semibold) var(--fs-label)/1.2 var(--font-core);color:var(--text-title)">Encoding</div>
+        <div style="display:flex;gap:10px;align-items:center"><span style="width:22px;height:22px;border-radius:50%;background:var(--glass-fill-3);border:var(--border-glass);flex:none"></span><span>Size · books in progress</span></div>
+        <div style="display:flex;gap:10px;align-items:center"><span style="width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 40% 40%,var(--aurora-sky),var(--aurora-peach));flex:none"></span><span>Inner aurora · stage (sky Understand, peach Translate, lavender Revise and check, blush paused)</span></div>
+        <div style="display:flex;gap:10px;align-items:center"><span style="width:22px;height:22px;border-radius:50%;background:var(--glass-fill-3);border:var(--border-glass);filter:blur(1.5px);opacity:.6;flex:none"></span><span>Focus and opacity · last activity (quiet projects drift out of focus)</span></div>
+        <div style="display:flex;gap:10px;align-items:center"><span style="width:22px;height:22px;border-radius:50%;border:1px dashed var(--text-dim);flex:none"></span><span>Dashed ring · assessment open; solid hairline · reported</span></div>
+        <div style="display:flex;gap:10px;align-items:center"><span style="width:22px;height:22px;border-radius:50%;background:url(https://s3.amazonaws.com/cbbt-er.public/media/photos/a827/1000.jpg) center/cover;flex:none"></span><span>Photo inside · project cover image, if the team set one</span></div>
+        <div style="display:flex;gap:10px;align-items:center"><span style="width:22px;height:22px;border-radius:50%;background:radial-gradient(circle,rgba(201,195,240,.6),transparent 70%);flex:none"></span><span>Position · region cluster, drift within it</span></div>
+      </div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px">
+    <div style="padding:16px 18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">Assessment timeline</div><div style="font:var(--type-caption);color:var(--text-muted);margin-top:2px">The same encoding compressed: one aurora thumbnail per assessment, left to right by time. Repeat when it is appropriate; the strip shows the rhythm without prescribing one.</div>
+      <div style="margin-top:14px;padding:14px;border-radius:var(--r-lg);background:var(--aurora-field);display:flex;gap:6px;align-items:flex-end;overflow:hidden">
+        <sc-for list="{{ timeline }}" as="t" hint-placeholder-count="12"><span title="{{ t.title }}" style="{{ t.style }}"></span></sc-for>
+      </div>
+    </div>
+    <div style="padding:16px 18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass)">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">Resource stack</div><div style="font:var(--type-caption);color:var(--text-muted);margin-top:2px">Aquifer Window: resources attached to a passage as stacked cards, each with a palette extracted from its image, fanned on hover.</div>
+      <div style="margin-top:14px;position:relative;height:150px;border-radius:var(--r-lg);background:var(--aurora-field);overflow:hidden">
+        <div style="position:absolute;left:50%;top:22px;width:150px;height:96px;border-radius:var(--r-md);transform:translateX(-50%) rotate(-8deg) translateX(-38px);background:url(https://s3.amazonaws.com/cbbt-er.public/media/maps/eng/c94/v1/original.png) center/cover;box-shadow:var(--shadow-card);border:var(--border-glass)"></div>
+        <div style="position:absolute;left:50%;top:18px;width:150px;height:96px;border-radius:var(--r-md);transform:translateX(-50%) rotate(-2deg);background:url(https://s3.amazonaws.com/cbbt-er.public/media/photos/a54/1000.jpg) center/cover;box-shadow:var(--shadow-card);border:var(--border-glass)"></div>
+        <div style="position:absolute;left:50%;top:26px;width:150px;height:96px;border-radius:var(--r-md);transform:translateX(-50%) rotate(6deg) translateX(38px);background:url(https://s3.amazonaws.com/cbbt-er.public/media/photos/a827/1000.jpg) center/cover;box-shadow:var(--shadow-float);border:var(--border-glass)"><span style="position:absolute;left:8px;bottom:8px;display:flex;gap:3px"><span style="width:10px;height:10px;border-radius:50%;background:#E9C6D2;border:.5px solid rgba(255,255,255,.8)"></span><span style="width:10px;height:10px;border-radius:50%;background:#6E86A8;border:.5px solid rgba(255,255,255,.8)"></span><span style="width:10px;height:10px;border-radius:50%;background:#F3EEF0;border:.5px solid rgba(255,255,255,.8)"></span></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="voice" data-screen-label="Voice and copy" style="display:flex;flex-direction:column;gap:18px">
+  <div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-muted)">Content</div>
+  <h2 style="margin:0;font:var(--type-hero);letter-spacing:var(--ls-hero);color:var(--text-title)">Voice and copy</h2>
+  <p style="margin:0;max-width:640px">Calm, second person, short. The app speaks to one named person and never about itself. It never grades a team; it shows bands and asks questions. Scripture is quoted exactly and never paraphrased in UI copy.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px">
+    <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass);display:grid;gap:12px">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">Rules</div>
+      <div style="display:grid;gap:8px;font:var(--type-caption);color:var(--text-body)">
+        <div style="display:grid;grid-template-columns:90px minmax(0,1fr);gap:10px"><span style="color:var(--text-muted)">Casing</span><span>Sentence case. Overlines uppercase at 9px. Book names and references as the translation writes them: Ruth 2:3, 1 Cor 13.</span></div>
+        <div style="display:grid;grid-template-columns:90px minmax(0,1fr);gap:10px"><span style="color:var(--text-muted)">Length</span><span>Titles two lines max. Supporting copy one sentence. Survey questions one sentence, one idea.</span></div>
+        <div style="display:grid;grid-template-columns:90px minmax(0,1fr);gap:10px"><span style="color:var(--text-muted)">Results</span><span>Bands, never raw scores. Simple and detailed levels for different readers. Findings are proposed until the team ratifies them.</span></div>
+        <div style="display:grid;grid-template-columns:90px minmax(0,1fr);gap:10px"><span style="color:var(--text-muted)">Cadence</span><span>Never prescribe one. "Repeat when it is appropriate." Point to stage guidance, not a universal schedule.</span></div>
+        <div style="display:grid;grid-template-columns:90px minmax(0,1fr);gap:10px"><span style="color:var(--text-muted)">Roles</span><span>Translator, Community, Church, Consultant, Viewer. Participants are never called users.</span></div>
+        <div style="display:grid;grid-template-columns:90px minmax(0,1fr);gap:10px"><span style="color:var(--text-muted)">Never</span><span>Emoji, exclamation marks, em dashes, "I", grades, percentages on people, "AI" in participant-facing copy.</span></div>
+      </div>
+    </div>
+    <div style="padding:18px;border-radius:var(--r-xl);background:var(--glass-fill-2);border:var(--border-glass);box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);backdrop-filter:blur(var(--blur-medium)) var(--sat-glass);display:grid;gap:10px">
+      <div style="font:var(--fw-semibold) var(--fs-body)/1.2 var(--font-core);color:var(--text-title)">Do / don't</div>
+      <sc-for list="{{ copyPairs }}" as="p" hint-placeholder-count="4">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div style="padding:12px 14px;border-radius:var(--r-sm);background:var(--glass-fill-3);border:var(--border-glass);box-shadow:var(--inner-top)"><div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--accent-teal)">Do</div><div style="margin-top:6px;font:var(--type-label);color:var(--text-title)">{{ p.yes }}</div></div>
+          <div style="padding:12px 14px;border-radius:var(--r-sm);background:var(--glass-fill-1);border:var(--border-hairline)"><div style="font:var(--type-overline);letter-spacing:var(--ls-overline);text-transform:uppercase;color:var(--text-dim)">Don't</div><div style="margin-top:6px;font:var(--type-label);color:var(--text-muted);text-decoration:line-through">{{ p.no }}</div></div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+<sc-if value="{{ copied }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:9;padding:10px 18px;border-radius:999px;background:var(--surface-inverse);color:var(--text-on-inverse);font:var(--fw-semibold) 13px/1 var(--font-core);box-shadow:var(--shadow-float);animation:gg-rise 420ms var(--ease-swell) both">Copied to clipboard</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { catSrc:'Door43', mapOn:true, zoom:null, lpCtx:'Attribute', lpSurf:'Popover', lpQ:'', lpSel:'hi', dark:false, copied:false, play:false, rise:0, sheet:true, sw:true, seg:'Prepare', phase:'Understand', tab:'Passages', filters:{Images:true,Maps:false,Articles:false,'Key terms':true,Offline:false}, script:'en', term:null, resolved:false, band:2, testament:'ot', genre:'law', gScript:'latin', stage:'understand', verses:6, depth:0, sel:0 };
+  componentDidMount(){
+    this.applyTheme(); const t=()=>window.ggProject&&window.d3?this.forceUpdate():setTimeout(t,120); t();
+    // version badge: published version.json first, else the design-system manifest/package in the project
+    const dsBase='/';
+    // last resort is the current contract version; published version.json wins, then the DS manifest if it carries one
+    fetch('/version.json').then(r=>r.ok?r.json():Promise.reject()).catch(()=>fetch(dsBase+'_ds_manifest.json').then(r=>r.ok?r.json():Promise.reject()).then(m=>({version:m.version||'1.0.0',commit:''}))).catch(()=>({version:'1.0.0',commit:''})).then(v=>this.setState({version:v.version,commit:(v.commit||'').slice(0,7)}));
+    // scroll-spy
+    const secs=[...document.querySelectorAll('main section[id]')];
+    if('IntersectionObserver' in window){this._io=new IntersectionObserver(es=>{const vis=es.filter(e=>e.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top);if(vis[0]&&vis[0].target.id!==this.state.active)this.setState({active:vis[0].target.id});},{rootMargin:'-10% 0px -70% 0px',threshold:0});secs.forEach(x=>this._io.observe(x));}
+    this._mq=window.matchMedia('(max-width:900px)'); this._onMq=()=>this.setState({narrow:this._mq.matches}); this._onMq(); this._mq.addEventListener('change',this._onMq);
+  }
+  componentWillUnmount(){ this._io&&this._io.disconnect(); this._mq&&this._mq.removeEventListener('change',this._onMq); }
+  componentDidUpdate(){ this.applyTheme(); }
+  applyTheme(){ const el=document.documentElement; if(this.state.dark) el.setAttribute('data-theme','dark'); else el.removeAttribute('data-theme'); }
+  copy=(e)=>{ const t=e.currentTarget.getAttribute('data-code')||''; try{navigator.clipboard.writeText(t);}catch(_){} clearTimeout(this._ct); this.setState({copied:true}); this._ct=setTimeout(()=>this.setState({copied:false}),1600); };
+  renderVals(){
+    const s=this.state, dark=s.dark;
+    const active=s.active||'overview', narrow=!!s.narrow, navOpen=!narrow||!!s.navOpen;
+    const link=(id,label,meta,href,ext)=>({href:href||'#'+id,label,meta:meta||'',target:ext?'_blank':undefined,click:()=>{if(narrow)this.setState({navOpen:false});},style:{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:8,padding:'6px 10px',borderRadius:'var(--r-xs)',font:'var(--type-label)',color:active===id?'var(--text-title)':'var(--text-body)',background:active===id?'var(--glass-fill-3)':'transparent',boxShadow:active===id?'var(--inner-top)':'none',transition:'var(--t-hover)'}});
+    const navGroups=[
+      {label:'Start',items:[link('overview','Overview'),link('voice','Voice and copy')]},
+      {label:'Foundations',items:[link('color','Color'),link('type','Type'),link('glass','Glass'),link('spacing','Spacing and radius'),link('motion','Motion'),link('icons','Icons')]},
+      {label:'Library',items:[link('components','Glass primitives'),link('bt','BT components'),link('language','LanguagePicker')]},
+      {label:'Generative',items:[link('generative','Rules'),link('projects','Project constellation')]},
+      {label:'Live',items:[link('','3D Review kit','kit','/ui_kits/3d-review/',true),link('','FIA kit','kit','/ui_kits/fia/',true),link('','Aquifer Window kit','kit','/ui_kits/aquifer-window/',true),link('','Cards index','html','/cards.html',true),link('','Contract','md','/CONTRACT.md',true),link('','Apps on the contract','md','/APPS.md',true),link('','Source','github','https://github.com/klappy/bt-design-system-generative-glass',true)]},
+    ];
+    const navBodyStyle={display:navOpen?'flex':'none',flexDirection:'column',gap:2,overflow:'auto',flex:1,minHeight:0};
+    const sw=(hex,css)=>({token:css,hex,css:`var(${css})`,style:{display:'block',height:44,borderRadius:'var(--r-sm)',background:hex,border:'var(--border-glass)',boxShadow:'var(--inner-top)'}});
+    const colorGroups=[
+      {name:'Ink',note:'text on light glass; pure black never on light surfaces',swatches:[sw('#0E1420','--ink-900'),sw('#242C3A','--ink-700'),sw('#5A6472','--ink-500'),sw('#7C8595','--ink-400'),sw('#9AA2B0','--ink-300'),sw('#B8BEC9','--ink-200')]},
+      {name:'Paper',note:'the studio behind the glass',swatches:[sw('#FFFFFF','--paper-000'),sw('#F7F8FB','--paper-050'),sw('#EEF0F5','--paper-100'),sw('#E3E6ED','--paper-200'),sw('#D6DAE4','--paper-300'),sw('#C3C9D6','--paper-400')]},
+      {name:'Aurora',note:'blurred blobs behind glass, and the only carrier of stage; never a border or text color',swatches:[sw('#C9C3F0','--aurora-lavender'),sw('#FBD8BD','--aurora-peach'),sw('#BCD6F4','--aurora-sky'),sw('#F6EFC6','--aurora-lemon'),sw('#F2CFDB','--aurora-blush'),sw('#CCEBE2','--aurora-mint')]},
+      {name:'Accents',note:'blue for identity chips, red for the live pin, teal for sync and success; nothing else',swatches:[sw('#1F4FE0','--accent-blue'),sw('#5C86F2','--accent-blue-soft'),sw('#D0202E','--accent-red'),sw('#3FB6A8','--accent-teal')]},
+      {name:'Night',note:'place heroes, media players, dark theme',swatches:[sw('#0B0D10','--night-900'),sw('#14161A','--night-800'),sw('#1D2025','--night-700'),sw('#2A2E35','--night-600'),sw('#08110F','--night-map'),sw('#A7ADB6','--on-night-500')]}
+    ];
+    const spacing=[2,4,6,8,10,12,14,16,20,24,28,32,40,48,64].map((px,i)=>({token:`--sp-${i+1}`,px:px+'px',style:{display:'block',height:8,width:Math.min(100,px/64*100)+'%',borderRadius:4,background:'var(--ink-300)',opacity:.7}}));
+    const radii=[['--r-key',6],['--r-xs',10],['--r-sm',14],['--r-md',18],['--r-lg',22],['--r-xl',28],['--r-2xl',34],['--r-pill',999]].map(([t,r])=>({token:t,px:r===999?'pill':r+'px',style:{display:'block',width:64,height:64,borderRadius:r,background:'var(--glass-fill-3)',border:'var(--border-glass)',boxShadow:'var(--shadow-rest),var(--inner-top)'}}));
+    const dot=(ease)=>({position:'absolute',top:1,left:s.play?'calc(100% - 13px)':1,width:12,height:12,borderRadius:'50%',background:'var(--surface-inverse)',transition:`left 1100ms ${ease}`});
+    const riseAnim=s.rise%2?'gg-rise-b':'gg-rise';
+    const iconNames=['mic','navigation','plus','chevronLeft','chevronRight','arrowUpRight','bookmark','maximize','minimize','moon','sun','delete','shift','search','compass','sparkle'];
+    // scripture
+    const FONTS={en:'"Noto Serif","SF Pro Text",Georgia,serif',he:'"Noto Serif Hebrew","SBL Hebrew","Times New Roman",serif',el:'"Noto Serif","SBL Greek","Times New Roman",serif',ar:'"Noto Naskh Arabic","Scheherazade New","Amiri",serif',hi:'"Noto Serif Devanagari","Kohinoor Devanagari","Mangal",serif'};
+    const SAMPLES={
+      // Aquifer MCP `scripture` captures, 2026-09-11 (gg/data/specimens.json). Hebrew: no Hebrew Bible in Aquifer; UHB text pending Door43 unfoldingWord/hbo_uhb.
+      en:{name:'English',font:'Noto Serif',lang:'en',dir:'ltr',ref:'Ruth 2:1–4',version:'BSB',src:'Aquifer · BereanStandardBible',verses:[[1,'Now Naomi had a relative on her husband’s side, a prominent man of noble character from the clan of Elimelech, whose name was Boaz.'],[2,'And Ruth the Moabitess said to Naomi, “Please let me go into the fields and glean heads of grain after someone in whose sight I may find favor.” “Go ahead, my daughter,” Naomi replied.'],[3,'So Ruth departed and went out into the field and gleaned after the harvesters. And she happened to come to the part of the field belonging to Boaz, who was from the clan of Elimelech.'],[4,'Just then Boaz arrived from Bethlehem and said to the harvesters, “The LORD be with you.” “The LORD bless you,” they replied.']]},
+      he:{name:'Hebrew',font:'Noto Serif Hebrew',lang:'he',dir:'rtl',ref:'רות ב׃א–ב',version:'UHB',src:'Door43 · unfoldingWord/hbo_uhb (pending)',verses:[[1,'וּֽלְנָעֳמִ֞י מוֹדַ֣ע לְאִישָׁ֗הּ אִ֚ישׁ גִּבּ֣וֹר חַ֔יִל מִמִּשְׁפַּ֖חַת אֱלִימֶ֑לֶךְ וּשְׁמ֖וֹ בֹּ֑עַז׃'],[2,'וַתֹּ֩אמֶר֩ ר֨וּת הַמּוֹאֲבִיָּ֜ה אֶֽל־נָעֳמִ֗י אֵֽלְכָה־נָּ֤א הַשָּׂדֶ֙ה֙ וַאֲלַקֳּטָ֣ה בַשִּׁבֳּלִ֔ים אַחַ֕ר אֲשֶׁ֥ר אֶמְצָא־חֵ֖ן בְּעֵינָ֑יו וַתֹּ֥אמֶר לָ֖הּ לְכִ֣י בִתִּ֑י׃']]},
+      el:{name:'Greek',font:'Noto Serif',lang:'el',dir:'ltr',ref:'Κατά Ματθαῖον 1:5',version:'SBLGNT',src:'Aquifer · SBLGNT',verses:[[5,'Σαλμὼν δὲ ἐγέννησεν τὸν Βόες ἐκ τῆς Ῥαχάβ, Βόες δὲ ἐγέννησεν τὸν Ἰωβὴδ ἐκ τῆς Ῥούθ, Ἰωβὴδ δὲ ἐγέννησεν τὸν Ἰεσσαί,']]},
+      ar:{name:'Arabic',font:'Noto Naskh Arabic',lang:'ar',dir:'rtl',ref:'راعوث ٢:١–٢',version:'AVD',src:'Aquifer · ArabicVanDyckBible',verses:[[1,'وَكَانَ لِنُعْمِي ذُو قَرَابَةٍ لِرَجُلِهَا، جَبَّارُ بَأْسٍ مِنْ عَشِيرَةِ أَلِيمَالِكَ، ٱسْمُهُ بُوعَزُ.'],[2,'فَقَالَتْ رَاعُوثُ ٱلْمُوآبِيَّةُ لِنُعْمِي: «دَعِينِي أَذْهَبْ إِلَى ٱلْحَقْلِ وَأَلْتَقِطْ سَنَابِلَ وَرَاءَ مَنْ أَجِدُ نِعْمَةً فِي عَيْنَيْهِ». فَقَالَتْ لَهَا: «ٱذْهَبِي يَابِنْتِي».']]},
+      hi:{name:'Hindi',font:'Noto Serif Devanagari',lang:'hi',dir:'ltr',ref:'रूत 2:1–2',version:'IRV',src:'Aquifer · IndianRevisedVersion',verses:[[1,'नाओमी के पति एलीमेलेक के कुल में उसका एक बड़ा धनी कुटुम्बी था, जिसका नाम बोअज था।'],[2,'मोआबिन रूत ने नाओमी से कहा, “मुझे किसी खेत में जाने दे, कि जो मुझ पर अनुग्रह की दृष्टि करे, उसके पीछे-पीछे मैं सिला बीनती जाऊँ।” उसने कहा, “चली जा, बेटी।”']]}
+    };
+    const scriptStyle=k=>({font:`400 17px/1.6 ${FONTS[k]}`,color:'var(--text-title)',textWrap:'pretty',letterSpacing:0});
+    const scripts=Object.keys(SAMPLES).map(k=>{const S=SAMPLES[k];return{name:S.name,font:S.font,lang:S.lang,dir:S.dir,text:S.verses[0][1],style:scriptStyle(k),css:`font:400 17px/1.6 ${FONTS[k]}; direction:${S.dir};`}});
+    const P=SAMPLES[s.script];
+    const passage={ref:P.ref,version:P.version,src:P.src,dir:P.dir,lang:P.lang,verses:P.verses.map(([n,text])=>({n,text})),style:{...scriptStyle(s.script),marginTop:14,maxWidth:'40em'}};
+    const pill=(a)=>({flex:'none',height:32,padding:'0 12px',borderRadius:999,border:'none',cursor:'pointer',whiteSpace:'nowrap',background:a?'var(--surface-solid)':'transparent',color:a?'var(--text-title)':'var(--text-muted)',boxShadow:a?'var(--shadow-rest)':'none',font:'var(--fw-semibold) 12px/1 var(--font-core)',transition:'var(--t-hover)'});
+    const scriptTabs=Object.keys(SAMPLES).map(k=>({label:SAMPLES[k].name,select:()=>this.setState({script:k}),style:pill(s.script===k)}));
+    // Aquifer `get` captures: AquiferOpenStudyNotes/eng/25802, AquiferOpenBibleDictionary/eng/8076; ACAI ids from BiblicaOpenBibleMaps/eng/OT072.
+    const TERMS=[{label:'Boaz',source:'Aquifer Open Study Notes · 25802',def:'Boaz was a relative of Elimelech, so he could be a family redeemer for the widows Ruth and Naomi (see study note on Judges 2:20).'},{label:'Ruth',source:'Aquifer Open Bible Dictionary · 8076',def:'A Moabitess and the widow of Mahlon, the son of Naomi and Elimelech, who were Ephrathites from Bethlehem. While gleaning in the barley fields of Boaz, Ruth found favor in his eyes (Ruth 2:2–22). She later married Boaz.'},{label:'Redeem',source:'ACAI keyterm:Redeem · 641 articles',def:'Key term linked from this passage across Aquifer resources. Ruth study notes on redemption: 3:12–13, 4:4, 4:6, 4:7 (AquiferOpenStudyNotes).'}];
+    const keyTerms=TERMS.map((t,i)=>{const a=s.term===i;return{label:t.label,select:()=>this.setState({term:a?null:i}),style:{padding:'5px 11px',borderRadius:999,cursor:'pointer',background:a?'var(--surface-inverse)':'var(--glass-fill-3)',color:a?'var(--text-on-inverse)':'var(--text-muted)',border:a?'.5px solid transparent':'var(--border-glass)',font:'var(--fw-medium) 10px/1.1 var(--font-core)',letterSpacing:'.01em',transition:'var(--t-hover)'}}});
+    const term=TERMS[s.term]||TERMS[0];
+    const syncBase={display:'inline-flex',alignItems:'center',gap:6,padding:'5px 11px',borderRadius:999,background:'var(--glass-fill-3)',border:'var(--border-glass)',backdropFilter:'blur(var(--blur-soft))',font:'var(--fw-medium) 10px/1.1 var(--font-core)',color:'var(--text-muted)',letterSpacing:'.01em'};
+    const syncStyles={ok:syncBase,syncing:syncBase,offline:{...syncBase,borderStyle:'dashed'}};
+    const comments=[{initials:'MR',name:'Miriam',role:'Translator',when:'yesterday',text:'“Happened to come” reads as pure chance here. Our word for it implies nobody arranged it, which cuts against the narrator’s wink.'},{initials:'JO',name:'Joel',role:'Consultant',when:'2 h ago',text:'Agree. Ruth 2:3 is deliberately understated. Try the idiom for “as it turned out” and read it aloud to the community group.'}];
+    const threadStyle={display:'grid',gap:12,padding:16,borderRadius:'var(--r-xl)',background:'var(--glass-fill-3)',border:'var(--border-glass)',boxShadow:'var(--shadow-card),var(--inner-top),var(--inner-edge)',transition:'all var(--dur-slow) var(--ease-liquid)',opacity:s.resolved?.62:1,filter:s.resolved?'saturate(.8)':'none'};
+    const resolvedChip={padding:'4px 9px',borderRadius:999,background:s.resolved?'var(--aurora-mint)':'var(--glass-fill-2)',border:'var(--border-glass)',font:'var(--type-overline)',letterSpacing:'var(--ls-overline)',textTransform:'uppercase',color:s.resolved?'var(--ink-900)':'var(--text-muted)'};
+    const STAGE={u:['Understand','var(--aurora-sky)'],t:['Translate','var(--aurora-peach)'],r:['Revise and check','var(--aurora-lavender)'],d:['Done','var(--aurora-mint)']};
+    const cell=(ch,st)=>({title:`Chapter ${ch}${st?' · '+STAGE[st][0]:''}`,style:{display:'block',width:14,height:14,borderRadius:'var(--r-key)',background:st?STAGE[st][1]:'var(--glass-fill-1)',border:st?'none':'var(--border-glass-soft)',boxShadow:st?'var(--inner-top)':'none'}});
+    const mk=(book,arr)=>({book,cells:arr.map((st,i)=>cell(i+1,st)),pct:Math.round(arr.filter(x=>x==='d').length/arr.length*100)+'%'});
+    const progress=[mk('Ruth',['d','d','r','t']),mk('Jonah',['d','d','d','d']),mk('Mark',['d','d','d','d','d','d','r','r','t','t','u','u',null,null,null,null]),mk('Philippians',['r','t','u',null]),mk('James',['d','d','r','t','u'])];
+    const bands=['Not yet','A little','Mostly','Fully'].map((label,i)=>{const a=s.band===i;return{label,select:()=>this.setState({band:i}),style:{display:'flex',flexDirection:'column',alignItems:'center',gap:8,padding:'12px 6px 10px',borderRadius:'var(--r-md)',cursor:'pointer',border:a?'.5px solid transparent':'var(--border-glass)',background:a?'var(--surface-inverse)':'var(--glass-fill-2)',color:a?'var(--text-on-inverse)':'var(--text-title)',boxShadow:a?'var(--shadow-card)':'var(--inner-top)',font:'var(--fw-medium) 12px/1.1 var(--font-core)',transition:'var(--t-hover)'},jar:{width:22,height:30,borderRadius:'4px 4px 8px 8px',border:`1.2px solid ${a?'var(--text-on-inverse)':'var(--text-dim)'}`,position:'relative',overflow:'hidden',display:'block'},fill:{position:'absolute',left:0,right:0,bottom:0,height:`${[10,38,66,94][i]}%`,background:'var(--aurora-mint)',display:'block'}}});
+    // Aquifer `get`/`browse` captures (gg/data/specimens.json). Licence shown where the resource metadata states it.
+    const resources=[{type:'Map',title:'Historical: Ruth',meta:'Biblica Open Bible Maps · OT072 · CC BY-SA 4.0',img:'https://raw.githubusercontent.com/BibleAquifer/BiblicaOpenBibleMaps/main/eng/json/images/OT072.png'},{type:'Image',title:'Bethlehem',meta:'UBS Images · 831521 · Ruth 2:4',img:'https://cdn.aquifer.bible/aquifer-content/resources/Media/UBS-0045_bethlehem.jpg'},{type:'Map',title:'Aerial View of Judea and Jerusalem',meta:'FIA Maps · c201 · Mark 1',img:'https://s3.amazonaws.com/cbbt-er.public/media/maps/eng/c201/v1/original.png'}].map(r=>({...r,imgStyle:{position:'relative',height:90,background:`url(${r.img}) center/cover, var(--glass-fill-2)`}}));
+    // Door43 MCP `execute GET /catalog/search` (stage=prod) and Aquifer `list`, captured 2026-09-11 (gg/data/specimens.json).
+    const D43=[['unfoldingWord/en_ult','unfoldingWord® Literal Text','Aligned Bible','en','ltr','v90','English · 2026-08-17'],['unfoldingWord/en_tn','unfoldingWord® Translation Notes','TSV Translation Notes','en','ltr','v90','English · 2026-08-17'],['unfoldingWord/en_tw','unfoldingWord® Translation Words','Translation Words','en','ltr','v90','English · 2026-08-14'],['BSOJ/ar_avd','الكتاب المقدس باللغة العربية، فان دايك','Aligned Bible','ar','rtl','v6.9','العربية · rtl'],['BSOJ/ar_tw','كلمات الترجمة unfoldingWord®','Translation Words','ar','rtl','v5','العربية · rtl'],['translationCore-Create-BCS/hi_glt','हिन्दी भाषा शाब्दिक पाठ','Aligned Bible','hi','ltr','v8','हिन्दी'],['translationCore-Create-BCS/hi_tw','बाइबल अनुवाद के मुख्य शब्द','Translation Words','hi','ltr','v8','हिन्दी'],['es-419_gl/es-419_glt','Texto Puente Literal','Aligned Bible','es-419','ltr','v42','Español (LatAm)']];
+    const AQ=[['AquiferOpenStudyNotes','Aquifer Open Study Notes','Study Notes','en','ltr','16,923','eng · 10 localizations'],['AquiferOpenBibleDictionary','Aquifer Open Bible Dictionary','Bible Dictionary','en','ltr','6,120','eng · 14 localizations'],['FIATranslationGuide','Familiarization, Internalization, Articulation (FIA)','Translation Guide','en','ltr','1,465','eng · 15 localizations'],['FIAMaps','FIA Maps','Images, Maps, Videos','en','ltr','227','eng'],['UWTranslationNotes','unfoldingWord® Translation Notes','Translation Guide','en','ltr','85,148','eng · 8 localizations'],['ArabicVanDyckBible','Arabic Van Dyck Bible','Bible','ar','rtl','66','arb'],['IndianRevisedVersion','Indian Revised Version','Bible','hi','ltr','66','hin'],['SBLGNT','The SBL Greek New Testament','Bible','el','ltr','27','grc']];
+    const catFont={en:FONTS.en,ar:FONTS.ar,hi:FONTS.hi,el:FONTS.el,'es-419':FONTS.en};
+    const catalog=(s.catSrc==='Door43'?D43:AQ).map(([id,title,subject,lang,dir,release,meta])=>({id,title,subject,lang,dir,release,meta,titleStyle:{font:`500 15px/1.35 ${lang==='en'||lang==='es-419'?'var(--font-core)':catFont[lang]}`,color:'var(--text-title)',marginTop:3,textAlign:dir==='rtl'?'end':'start',letterSpacing:lang==='en'?'-0.01em':0}}));
+    const catalogSources=['Door43','Aquifer'].map(k=>({label:k,select:()=>this.setState({catSrc:k}),style:pill(s.catSrc===k)}));
+    const catalogNote=s.catSrc==='Door43'?'Source: door43.klappy.dev · GET /catalog/search · stage=prod · upstream git.door43.org 1.27.2+dcs · 19 unfoldingWord English entries, 25 across ar/es-419/fr/hi/sw':'Source: aquifer.klappy.dev · list · 57 resources · chip shows article count';
+    const tabs=[['Home','compass'],['Passages','bookmark'],['Review','sparkle'],['Search','search']].map(([label,icon])=>{const active=s.tab===label;return{label,icon,active,select:()=>this.setState({tab:label}),style:{display:'inline-flex',alignItems:'center',gap:8,height:44,padding:active?'0 18px 0 14px':'0 13px',borderRadius:999,border:'none',cursor:'pointer',background:active?'var(--surface-inverse)':'transparent',color:active?'var(--text-on-inverse)':'var(--text-muted)',font:'var(--fw-semibold) 13px/1 var(--font-core)',transition:'var(--t-hover)'}}});
+    const seg=(list,key)=>list.map(label=>{const a=s[key]===label;return{label,select:()=>this.setState({[key]:label}),style:{flex:1,height:36,borderRadius:999,border:'none',cursor:'pointer',whiteSpace:'nowrap',padding:'0 10px',background:a?'var(--surface-solid)':'transparent',color:a?'var(--text-title)':'var(--text-muted)',boxShadow:a?'var(--shadow-rest)':'none',font:'var(--fw-semibold) 12px/1 var(--font-core)',transition:'var(--t-hover)'}}});
+    const segments=seg(['Prepare','Collect','Understand','Improve'],'seg');
+    const phases=seg(['Prepare','Collect','Understand','Improve'],'phase');
+    const filters=Object.keys(s.filters).map(label=>{const on=s.filters[label];return{label,toggle:()=>this.setState({filters:{...s.filters,[label]:!on}}),style:{flex:'none',padding:'9px 16px',borderRadius:999,cursor:'pointer',whiteSpace:'nowrap',background:on?'var(--surface-inverse)':'var(--glass-fill-2)',color:on?'var(--text-on-inverse)':'var(--text-body)',border:on?'.5px solid transparent':'var(--border-glass-soft)',backdropFilter:'blur(var(--blur-medium)) var(--sat-glass)',boxShadow:'var(--shadow-rest),var(--inner-top)',font:'var(--type-label)',transition:'var(--t-hover)'}}});
+    const sheetBehind={position:'absolute',inset:0,padding:22,transition:'all var(--dur-slow) var(--ease-liquid)',transform:s.sheet?'scale(.94)':'none',opacity:s.sheet?.5:1,filter:s.sheet?'blur(6px)':'none'};
+    const sheetStyle={position:'absolute',left:8,right:8,bottom:0,padding:'12px 18px 18px',borderRadius:'var(--r-2xl) var(--r-2xl) 0 0',background:'var(--glass-fill-4)',backdropFilter:'blur(var(--blur-heavy)) var(--sat-glass)',border:'var(--border-glass)',borderBottom:'none',boxShadow:'var(--shadow-float),var(--inner-top)',transition:'transform var(--dur-slow) var(--ease-damp)',transform:s.sheet?'translateY(0)':'translateY(110%)'};
+    const switchStyle={width:52,height:32,borderRadius:999,border:'var(--border-glass)',cursor:'pointer',position:'relative',padding:0,background:s.sw?'var(--surface-inverse)':'var(--glass-fill-2)',boxShadow:'var(--inner-top)',transition:'background var(--dur-fast) var(--ease-liquid)'};
+    const switchKnob={position:'absolute',top:3,left:s.sw?23:3,width:26,height:26,borderRadius:'50%',background:s.sw?'var(--text-on-inverse)':'var(--surface-solid)',boxShadow:'var(--shadow-rest)',transition:'left var(--dur-fast) var(--ease-liquid)'};
+    // generative
+    const chip=(a)=>({padding:'7px 12px',borderRadius:999,cursor:'pointer',background:a?'var(--surface-inverse)':'var(--glass-fill-2)',color:a?'var(--text-on-inverse)':'var(--text-body)',border:a?'.5px solid transparent':'var(--border-glass-soft)',font:'var(--fw-medium) 11px/1 var(--font-core)',transition:'var(--t-hover)'});
+    const HUES={ot:{a:'188,214,244',b:'201,195,240',c:'204,235,226',label:'Old Testament'},nt:{a:'251,216,189',b:'246,239,198',c:'242,207,219',label:'New Testament'}};
+    const H=HUES[s.testament];
+    const g=(pos,col,alpha)=>`radial-gradient(${pos},rgba(${col},${alpha}),transparent 72%)`;
+    const GENRES={
+      law:{label:'Law',note:'Law: a steady horizon, two blobs high and wide.',bg:[g('60% 30% at 20% 18%',H.a,.9),g('60% 30% at 80% 16%',H.b,.85)],eyebrow:'Genesis 1 · Law',book:'en'},
+      history:{label:'History',note:'History: one blob leads, one follows lower right, like a path.',bg:[g('50% 34% at 26% 30%',H.a,.9),g('44% 30% at 76% 72%',H.b,.8)],eyebrow:'Ruth 2 · History',book:'en'},
+      poetry:{label:'Poetry',note:'Poetry: pools low, soft and wide beneath the text.',bg:[g('70% 34% at 40% 86%',H.b,.9),g('50% 28% at 80% 80%',H.c,.7)],eyebrow:'Psalm 23 · Poetry',book:'he'},
+      prophecy:{label:'Prophecy',note:'Prophecy: rises from the bottom left toward the top right.',bg:[g('40% 40% at 16% 84%',H.a,.9),g('40% 40% at 60% 46%',H.b,.7),g('36% 36% at 88% 12%',H.c,.7)],eyebrow:'Isaiah 40 · Prophecy',book:'he'},
+      gospel:{label:'Gospel',note:'Gospel: one blob centred behind the text, calm and symmetrical.',bg:[g('56% 40% at 50% 50%',H.b,.9),g('40% 26% at 12% 12%',H.a,.4),g('40% 26% at 88% 88%',H.c,.4)],eyebrow:'John 1 · Gospel',book:'el'},
+      epistle:{label:'Epistle',note:'Epistle: spread evenly so no line sits on a hot spot.',bg:[g('34% 22% at 18% 20%',H.a,.7),g('34% 22% at 82% 20%',H.b,.7),g('34% 22% at 18% 80%',H.c,.7),g('34% 22% at 82% 80%',H.a,.7)],eyebrow:'Philippians 2 · Epistle',book:'el'},
+      apocalyptic:{label:'Apocalyptic',note:'Apocalyptic: high and asymmetric, one bright blob off-centre.',bg:[g('46% 50% at 74% 10%',H.b,.95),g('30% 24% at 18% 40%',H.c,.5)],eyebrow:'Revelation 21 · Apocalyptic',book:'el'}
+    };
+    const G=GENRES[s.genre];
+    const testaments=Object.keys(HUES).map(k=>({label:HUES[k].label,select:()=>this.setState({testament:k}),style:{...pill(s.testament===k),flex:1}}));
+    const genres=Object.keys(GENRES).map(k=>({label:GENRES[k].label,select:()=>this.setState({genre:k}),style:chip(s.genre===k)}));
+    const SCR={latin:['Latin','en','medium',24],greek:['Greek','el','medium',24],hebrew:['Hebrew','he','strong',40],arabic:['Arabic','ar','strong',40],devanagari:['Devanagari','hi','strong',40]};
+    const gScripts=Object.keys(SCR).map(k=>({label:SCR[k][0],select:()=>this.setState({gScript:k}),style:chip(s.gScript===k)}));
+    const SC=SCR[s.gScript]; const sample=SAMPLES[SC[1]];
+    const STG={understand:['Understand','188,214,244'],translate:['Translate','251,216,189'],revise:['Revise and check','201,195,240']};
+    const stages=Object.keys(STG).map(k=>({label:STG[k][0],select:()=>this.setState({stage:k}),style:{...pill(s.stage===k),flex:1,padding:'0 8px'}}));
+    const ST=STG[s.stage];
+    const fi=s.verses<=8?3:4; const fillA=[0,.28,.46,.62,.78][fi]; const fillDark=[0,.05,.09,.14,.20][fi];
+    const radLadder=[['--r-xl',28],['--r-lg',22],['--r-md',18],['--r-sm',14]]; const rad=radLadder[s.depth]; const nestRad=radLadder[Math.min(3,s.depth+1)];
+    const sheen=`linear-gradient(135deg,rgba(${ST[1]},${dark?.35:.7}) 0%,rgba(255,255,255,0) 38%,rgba(255,255,255,0) 62%,rgba(${ST[1]},${dark?.15:.3}) 100%)`;
+    const gCss=`.gg-passage{\n  /* ${H.label} · ${G.label} · ${SC[0]} · ${ST[0]} */\n  --aurora-seed:${G.bg.join(',\n    ')};\n  backdrop-filter:blur(var(--blur-${SC[2]})) var(--sat-glass); /* ${SC[3]}px */\n  background:var(--glass-fill-${fi}); /* ${dark?fillDark:fillA}, ${s.verses} verses */\n  border-radius:var(${rad[0]}); /* ${rad[1]}px */\n  border:var(--border-glass);\n  box-shadow:var(--shadow-card),var(--inner-top),var(--inner-edge);\n}\n.gg-passage::before{ background:${sheen}; }`;
+    const gCardStyle={position:'relative',width:'100%',maxWidth:380,borderRadius:rad[1],overflow:'hidden',background:dark?`rgba(255,255,255,${fillDark})`:`rgba(255,255,255,${fillA})`,backdropFilter:`blur(${SC[3]}px) saturate(160%)`,WebkitBackdropFilter:`blur(${SC[3]}px) saturate(160%)`,border:'var(--border-glass)',boxShadow:'var(--shadow-card),var(--inner-top),var(--inner-edge)',transition:'all var(--dur-slow) var(--ease-liquid)'};
+    const gVerses=sample.verses.slice(0,Math.min(3,Math.max(1,Math.ceil(s.verses/6)))).map(v=>v[1]).join(' ');
+    // LanguagePicker. Coverage from Aquifer `list` localizations + Door43 catalog (2026-09-11); a=available, i=AI-translatable, n=none. Types: Bible · Notes · Words · Maps.
+    const LANGS=[
+      ['en','English','English','ltr','United Kingdom, United States, worldwide','aaaa',true,true],['es-419','Español','Spanish (Latin America)','ltr','Latin America','aaai',true,true],['fr','Français','French','ltr','France, West Africa','aaaa',true,true],['pt','Português','Portuguese','ltr','Brazil, Portugal, Mozambique','aaai',true,true],
+      ['hi','हिन्दी','Hindi','ltr','India','aaai',true,true],['ar','العربية','Arabic','rtl','Middle East, North Africa','aaaa',true,true],['sw','Kiswahili','Swahili','ltr','Tanzania, Kenya','aaii',true,true],['id','Bahasa Indonesia','Indonesian','ltr','Indonesia','aaia',true,true],
+      ['ru','Русский','Russian','ltr','Russia, Central Asia','aaai',true,false],['zh-Hant','繁體中文','Chinese (Traditional)','ltr','Taiwan, Hong Kong','aaaa',true,false],['ne','नेपाली','Nepali','ltr','Nepal','aiin',true,false],['tpi','Tok Pisin','Tok Pisin','ltr','Papua New Guinea','aain',true,false],
+      ['gu','ગુજરાતી','Gujarati','ltr','India','aaan',false,false],['bi','Bislama','Bislama','ltr','Vanuatu','ainn',false,false],['fa','فارسی','Persian','rtl','Iran, Afghanistan','niin',false,false],['ki','Gĩkũyũ','Kikuyu','ltr','Kenya','niin',false,false],['qu','Runasimi','Quechua','ltr','Peru, Bolivia','niin',false,false],['km','ខ្មែរ','Khmer','ltr','Cambodia','nnnn',false,false]
+    ];
+    const TYPES=['Bible','Notes','Words','Maps'];
+    const lpCtx=s.lpCtx, lpQ=(s.lpQ||'').trim().toLowerCase();
+    const recent=['hi','sw'], projects=['ne','tpi'], device=['en'];
+    const covOf=c=>c.split('');
+    const hasAny=c=>/a|i/.test(c);
+    const rows=LANGS.map(([code,autonym,english,dir,region,cov,gateway,localized])=>({code,autonym,english,dir,region,cov,gateway,localized}));
+    const matches=r=>!lpQ||[r.english,r.autonym,r.code,r.region].some(v=>v.toLowerCase().includes(lpQ));
+    let pool=rows.filter(matches);
+    if(lpCtx==='Filter') pool=pool.filter(r=>hasAny(r.cov));
+    const sugg=[...recent,...projects,...device,...rows.filter(r=>r.gateway).map(r=>r.code)].filter((c,i,a)=>a.indexOf(c)===i);
+    const suggRows=lpQ?[]:sugg.map(c=>pool.find(r=>r.code===c)).filter(Boolean);
+    const restRows=pool.filter(r=>lpQ||!sugg.includes(r.code)).sort((a,b)=>a.english.localeCompare(b.english));
+    const noteFor=r=>{const none=!hasAny(r.cov);if(lpCtx==='UI locale')return r.localized?'App available in this language':'App not localized yet · shown in '+(r.dir==='rtl'?'Arabic':'English');if(none)return 'No resources yet · you can still choose it';const ai=covOf(r.cov).filter(x=>x==='i').length;return ai?`${4-ai-covOf(r.cov).filter(x=>x==='n').length} available · ${ai} AI-translatable`:'Full coverage';};
+    const covChip=(st,t)=>({label:t,ai:st==='i',title:`${t} · ${st==='a'?'available':st==='i'?'AI-translatable':'none'}`,style:{display:'inline-flex',alignItems:'center',padding:'3px 7px',borderRadius:999,font:'var(--fw-medium) 9px/1.1 var(--font-core)',letterSpacing:'.02em',whiteSpace:'nowrap',background:st==='n'?'transparent':'var(--glass-fill-4)',border:st==='n'?'1px dashed var(--text-dim)':'var(--border-glass)',color:st==='n'?'var(--text-dim)':'var(--text-title)',boxShadow:st==='n'?'none':'var(--inner-top)'}});
+    const mkRow=r=>{const a=s.lpSel===r.code;return{...r,note:noteFor(r),select:()=>this.setState({lpSel:r.code}),cov:covOf(r.cov).map((st,i)=>covChip(st,TYPES[i])),autoStyle:{font:`500 15px/1.3 ${r.dir==='rtl'?FONTS.ar:['hi','ne'].includes(r.code)?FONTS.hi:'var(--font-core)'}`,color:'var(--text-title)',letterSpacing:r.code==='en'?'-0.01em':0},style:{display:'flex',justifyContent:'space-between',alignItems:'center',gap:12,width:'100%',padding:'10px 12px',borderRadius:'var(--r-sm)',border:a?'.5px solid transparent':'.5px solid transparent',background:a?'var(--glass-fill-3)':'transparent',boxShadow:a?'var(--inner-top),var(--glow-focus)':'none',cursor:'pointer',textAlign:'start',opacity:hasAny(r.cov)||lpCtx==='UI locale'?1:.72,transition:'var(--t-hover)'}}};
+    const lpGroups=[suggRows.length?{label:'Suggested',rows:suggRows.map(mkRow)}:null,restRows.length?{label:lpQ?`Matches for “${s.lpQ}”`:'All languages',rows:restRows.map(mkRow)}:null].filter(Boolean);
+    const lpContexts=['Filter','Attribute','Target','UI locale'].map(k=>({label:k,select:()=>this.setState({lpCtx:k}),style:pill(lpCtx===k)}));
+    const lpSurfaces=['Popover','Sheet'].map(k=>({label:k,select:()=>this.setState({lpSurf:k}),style:pill(s.lpSurf===k)}));
+    const lpIsSheet=s.lpSurf==='Sheet';
+    const lpFrame=lpIsSheet?{width:'100%',maxWidth:390,padding:'12px 16px 22px',borderRadius:'34px 34px 22px 22px',background:'var(--material-floating)',backdropFilter:'blur(var(--blur-heavy)) var(--sat-glass)',border:'var(--border-glass)',boxShadow:'var(--shadow-float),var(--inner-top)',alignSelf:'end'}:{width:'100%',maxWidth:520,padding:'16px 16px 18px',borderRadius:'var(--r-xl)',background:'var(--material-floating)',backdropFilter:'blur(var(--blur-heavy)) var(--sat-glass)',border:'var(--border-glass)',boxShadow:'var(--shadow-float),var(--inner-top)'};
+    const lpTitle={Filter:'Resources in',Attribute:'Project language','Target':'Translate into','UI locale':'App language'}[lpCtx];
+    const total=lpGroups.reduce((n,g)=>n+g.rows.length,0);
+    // constellation: projects
+    // Region anchors in lon/lat, projected with the same Natural Earth fit as <gg-world-outline>; the x,y fallback is used until d3 loads.
+    const clusterDefs=[{name:'South Asia',lon:80,lat:21,x:71,y:40},{name:'East Africa',lon:37,lat:-2,x:60,y:52},{name:'Pacific',lon:160,lat:-9,x:91,y:56},{name:'Americas',lon:-72,lat:-8,x:30,y:55}].map(c=>{const p=window.ggProject&&window.ggProject(c.lon,c.lat);return p?{...c,x:p.x,y:p.y}:c;});
+    const mapOn=this.props.mapUnderlay??s.mapOn;
+    const zc=clusterDefs.find(c=>c.name===s.zoom);
+    const fieldZoom={position:'absolute',inset:0,transformOrigin:zc?`${zc.x}% ${zc.y}%`:'50% 50%',transform:zc?'scale(2.3)':'none',transition:'transform var(--dur-slow) var(--ease-liquid)'};
+    const miniBtn=a=>({height:28,padding:'0 12px',borderRadius:999,border:'none',cursor:'pointer',background:a?'var(--surface-inverse)':'transparent',color:a?'var(--text-on-inverse)':'var(--text-muted)',font:'var(--fw-semibold) 11px/1 var(--font-core)',whiteSpace:'nowrap',transition:'var(--t-hover)'});
+    const moods={Understand:['#BCD6F4','#C9C3F0'],Translate:['#FBD8BD','#F6EFC6'],'Revise and check':['#C9C3F0','#F2CFDB'],Paused:['#F2CFDB','#E3E6ED']};
+    const raw=[
+      ['South Asia','River project','2 days ago',6,'Translate',true,'https://s3.amazonaws.com/cbbt-er.public/media/photos/a827/1000.jpg',-9,-8],['South Asia','Hill project','today',1,'Understand',false,null,7,6],['South Asia','Delta project','3 weeks ago',4,'Revise and check',true,null,-3,11],['South Asia','Plateau project','6 days ago',3,'Paused',false,'https://s3.amazonaws.com/cbbt-er.public/media/photos/a54/1000.jpg',10,-7],
+      ['East Africa','Lake project','today',12,'Revise and check',false,null,-8,-6],['East Africa','Ridge project','yesterday',8,'Translate',true,null,8,7],['East Africa','Valley project','5 days ago',2,'Understand',true,null,-4,10],['East Africa','Savanna project','2 weeks ago',5,'Translate',true,null,9,-8],
+      ['Pacific','Island project','today',2,'Understand',false,null,-7,-6],['Pacific','Harbor project','1 week ago',4,'Revise and check',true,null,8,5],['Pacific','Reef project','4 weeks ago',3,'Paused',false,null,-2,9],
+      ['Americas','Forest project','3 days ago',3,'Translate',false,'https://s3.amazonaws.com/cbbt-er.public/media/maps/eng/c37/v1/original.png',-8,-7],['Americas','Canyon project','yesterday',9,'Revise and check',true,null,7,6],['Americas','Prairie project','2 weeks ago',2,'Understand',true,null,-3,10]
+    ];
+    const rec={'today':1,'yesterday':.92,'2 days ago':.85,'3 days ago':.8,'5 days ago':.7,'6 days ago':.68,'1 week ago':.62,'2 weeks ago':.5,'3 weeks ago':.42,'4 weeks ago':.36};
+    const sessions=raw.map((r,i)=>{const [topic,title,when,turns,mood,done,image,dx,dy]=r;const c=clusterDefs.find(k=>k.name===topic);const size=30+Math.min(turns,12)*4.5;const R=rec[when]||.5;const sel=s.sel===i;const [m1,m2]=moods[mood];
+      return{topic,title,when,turns,mood,done,image,hasImage:!!image,status:done?'reported':'assessment open',select:()=>this.setState({sel:i}),
+        style:{position:'absolute',left:`calc(${c.x+dx}% - ${size/2}px)`,top:`calc(${c.y+dy}% - ${size/2}px)`,width:size,height:size,borderRadius:'50%',padding:0,cursor:'pointer',overflow:'hidden',background:dark?'rgba(255,255,255,.10)':'rgba(255,255,255,.5)',border:done?'.5px solid rgba(255,255,255,.75)':'1px dashed var(--text-dim)',boxShadow:sel?'var(--shadow-float),var(--inner-top),var(--glow-focus)':'var(--shadow-card),var(--inner-top)',opacity:.45+.55*R,filter:`blur(${(1-R)*2.2}px)`,transform:sel?'scale(1.12)':'none',transition:'var(--t-hover)',animation:`gg-orbit ${5+(i%4)}s var(--ease-liquid) ${i*.4}s infinite`},
+        inner:{position:'absolute',inset:'-30%',background:`radial-gradient(40% 40% at 35% 35%,${m1},transparent 70%),radial-gradient(40% 40% at 68% 70%,${m2},transparent 70%)`,filter:'blur(8px)',opacity:dark?.75:.95},
+        photo:image?{position:'absolute',inset:0,borderRadius:'50%',background:`url(${image}) center/cover`,opacity:.55}:{display:'none'}};});
+    const clusters=clusterDefs.map(c=>({label:c.name.toUpperCase(),select:()=>this.setState({zoom:s.zoom===c.name?null:c.name}),style:{position:'absolute',left:`${c.x}%`,top:`${c.y-19}%`,transform:`translateX(-50%) scale(${zc?1/2.3:1})`,transformOrigin:'50% 100%',padding:'4px 8px',border:'none',background:'transparent',cursor:'pointer',font:'var(--type-overline)',letterSpacing:'var(--ls-overline)',color:s.zoom===c.name?'var(--text-title)':'var(--text-dim)',whiteSpace:'nowrap',transition:'var(--t-hover)'}}));
+    const selS=sessions[s.sel]||sessions[0];
+    const timeline=raw.slice().sort((a,b)=>(rec[a[2]]||.5)-(rec[b[2]]||.5)).map(r=>{const [m1,m2]=moods[r[4]];const h=18+Math.min(r[3],12)*4;return{title:r[1],style:{flex:1,height:h,borderRadius:'var(--r-key)',background:`linear-gradient(180deg,${m1},${m2})`,border:r[5]?'var(--border-glass)':'1px dashed var(--text-dim)',boxShadow:'var(--inner-top)',opacity:.5+.5*(rec[r[2]]||.5)}}});
+    const copyPairs=[{yes:'Here to take the survey?',no:'Welcome! Click here to begin your survey!'},{yes:'Quality band: Growing. Detailed view available.',no:'Score: 67/100 (C+)'},{yes:'Repeat when it is appropriate.',no:'Re-run this assessment every 90 days.'},{yes:'Miriam, Ruth 2 is ready for the community read-aloud.',no:'I’ve analyzed your translation and it looks great!'}];
+    return {
+      navGroups, navBodyStyle, toggleNav:()=>this.setState({navOpen:!s.navOpen}), navToggleLabel:navOpen&&narrow?'Close':'Menu',
+      versionLabel:'v'+(s.version||'1.0.0'), versionSha:s.commit||'', versionHref:'/CONTRACT.md',
+      themeLabel:dark?'Dark theme':'Light theme', toggleDark:()=>this.setState({dark:!dark}),
+      knobStyle:{position:'absolute',top:2,left:dark?14:2,width:14,height:14,borderRadius:'50%',background:'var(--text-on-inverse)',transition:'left var(--dur-fast) var(--ease-liquid)'},
+      copy:this.copy, copied:s.copied, colorGroups, spacing, radii, iconNames, scripts,
+      togglePlay:()=>this.setState({play:!s.play}), easeLiquid:dot('cubic-bezier(.22,1,.36,1)'), easeSwell:dot('cubic-bezier(.34,1.56,.64,1)'), easeDamp:dot('cubic-bezier(.4,0,.2,1)'), easeFlow:dot('cubic-bezier(.65,0,.35,1)'),
+      replayRise:()=>this.setState({rise:s.rise+1}), riseStyle:{width:64,height:64,borderRadius:'var(--r-md)',background:'var(--glass-fill-3)',border:'var(--border-glass)',boxShadow:'var(--shadow-card),var(--inner-top)',animation:`${riseAnim} 680ms var(--ease-swell) both`},
+      fiaSteps:[{name:'Understand',time:'Read, listen, retell the passage',active:true},{name:'Translate',time:'Draft in the heart language'},{name:'Revise and check',time:'Community and consultant review'}],
+      ggVerses:P.verses.slice(0,2).map(([n,text])=>({n,text})), ggTerms:TERMS.map(t=>({label:t.label,source:t.source,definition:t.def})),
+      passage, scriptTabs, keyTerms, term, termOpen:s.term!==null, closeTerm:()=>this.setState({term:null}), syncStyles,
+      comments, threadStyle, resolvedChip, resolvedLabel:s.resolved?'Resolved':'Open', resolveBtn:s.resolved?'Reopen':'Resolve', toggleResolved:()=>this.setState({resolved:!s.resolved}),
+      progress, bands, resources, catalog, catalogSources, catalogNote,
+      lpContexts, lpSurfaces, lpIsSheet, lpFrame, lpTitle, lpGroups, lpQuery:s.lpQ||'', lpHasQuery:!!lpQ, lpType:e=>this.setState({lpQ:e.target.value}), lpClear:()=>this.setState({lpQ:''}), lpEmpty:total===0, lpEmptyText:lpCtx==='Filter'?`No language with resources matches “${s.lpQ}”. Switch to a project context to see every language.`:`Nothing matches “${s.lpQ}”. Try the English name, the code, or a country.`, lpCount:`${total} of ${LANGS.length}${lpCtx==='Filter'?' with resources':''}`,
+      mapOn, fieldZoom, zoomed:!!zc, zoomOut:()=>this.setState({zoom:null}), toggleMap:()=>this.setState({mapOn:!mapOn}), mapLabel:mapOn?'Map on':'Map off', mapBtn:miniBtn(mapOn), worldBtn:miniBtn(false),
+      tabs, segments, phases, filters, sheetBehind, sheetStyle, sheetBtn:s.sheet?'Dismiss':'Present', toggleSheet:()=>this.setState({sheet:!s.sheet}), switchStyle, switchKnob, toggleSwitch:()=>this.setState({sw:!s.sw}),
+      testaments, genres, genreNote:G.note, gScripts, stages, verses:s.verses, depth:s.depth,
+      setVerses:e=>this.setState({verses:+e.target.value}), setDepth:e=>this.setState({depth:+e.target.value}),
+      gFillLabel:`--glass-fill-${fi} (${s.verses} verses)`, gRadiusLabel:`${rad[0]} (${rad[1]}px)`, gCss,
+      gAuroraStyle:{position:'absolute',inset:'-10%',background:G.bg.join(',')+',var(--aurora-field)',filter:'blur(26px)',opacity:dark?.55:1,transition:'opacity var(--dur-slow)'},
+      gCardStyle, gSheenStyle:{position:'absolute',inset:0,borderRadius:'inherit',background:sheen,pointerEvents:'none'},
+      gEyebrow:G.eyebrow, gStageLabel:ST[0], gTitle:sample.ref, gDir:sample.dir, gLang:sample.lang, gBody:gVerses,
+      gBodyStyle:{...scriptStyle(SC[1]),marginTop:10,fontSize:16},
+      gNested:s.depth>0, gNestRadius:nestRad[1]+'px',
+      gNestStyle:{marginTop:14,padding:12,borderRadius:nestRad[1],background:dark?`rgba(255,255,255,${fillDark})`:`rgba(255,255,255,${Math.min(.78,fillA+.16)})`,border:'var(--border-glass)',boxShadow:'var(--inner-top)'},
+      sessions, clusters, sel:selS, timeline, copyPairs
+    };
+  }
+}
+</script>
+</body>
+</html>

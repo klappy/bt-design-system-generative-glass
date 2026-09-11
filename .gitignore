@@ -1,3 +1,6 @@
 assets/fonts/*.otf
 assets/fonts/*.ttf
 _dev/
+node_modules/
+.wrangler/
+version.json

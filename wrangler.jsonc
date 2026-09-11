@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bible-glass",
+  "compatibility_date": "2026-08-01",
+  // Static assets only: the repo root is served as-is. No Worker script.
+  "assets": { "directory": ".", "not_found_handling": "404-page", "html_handling": "auto-trailing-slash" },
+  // Custom domain: wrangler creates the DNS record on first deploy.
+  "routes": [{ "pattern": "bible-glass.klappy.dev", "custom_domain": true }],
+  // Branch previews land on <branch>-bible-glass.klappy.workers.dev (Workers Builds, versions upload).
+  "workers_dev": true,
+  "observability": { "enabled": true }
+}
