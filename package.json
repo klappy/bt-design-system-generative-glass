@@ -1,8 +1,12 @@
 {
   "name": "bible-glass",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
-  "description": "Generative Glass design system for Bible Translation apps, served as static assets at bible-glass.klappy.dev",
-  "scripts": { "dev": "wrangler dev" },
+  "description": "Generative Glass design system for Bible Translation apps, served as static assets at bible-glass.klappy.dev. The version here is the visual design contract between the apps.",
+  "scripts": {
+    "stamp": "node scripts/stamp.mjs",
+    "build": "npm run stamp",
+    "dev": "npm run stamp && wrangler dev"
+  },
   "devDependencies": { "wrangler": "^4.99.0" }
 }

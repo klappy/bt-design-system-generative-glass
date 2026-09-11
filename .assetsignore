@@ -8,3 +8,4 @@ package.json
 package-lock.json
 wrangler.jsonc
 _adherence.oxlintrc.json
+scripts
