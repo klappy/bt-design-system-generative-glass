@@ -2,6 +2,7 @@
   "name": "bible-glass",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "description": "Generative Glass design system for Bible Translation apps, served as static assets at bible-glass.klappy.dev. The version here is the visual design contract between the apps.",
   "scripts": {
     "stamp": "node scripts/stamp.mjs",
