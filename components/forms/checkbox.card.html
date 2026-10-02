@@ -1,0 +1,35 @@
+<!-- @dsCard group="Components" viewport="390x844" name="Checkbox" subtitle="GlassCheckbox — multi-select row, light and dark" -->
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>*{box-sizing:border-box}body{margin:0;font-family:var(--font-core);background:var(--aurora-field);-webkit-font-smoothing:antialiased;min-height:100vh;color:var(--text-title)}#root{padding:18px 16px;max-width:390px}</style>
+<script>if(new URLSearchParams(location.search).get('theme')==='dark')document.documentElement.setAttribute('data-theme','dark');</script>
+</head><body><div id="root"></div>
+<script>
+// GlassCheckbox is not in the compiled _ds_bundle.js until the design project re-syncs (DEPLOY.md:13), so this card
+// transpiles the source file directly, the same way components-loader.js does. ?theme=dark previews the dark theme.
+(async()=>{
+  const NS={};let src=await (await fetch('./GlassCheckbox.jsx')).text();
+  src=src.replace(/^import\s+React\s+from\s+'react';?\s*$/m,'').replace(/^export\s+/mg,'');
+  new Function('React','NS',Babel.transform(src+'\n;NS.GlassCheckbox=GlassCheckbox;',{presets:['react']}).code)(React,NS);
+  const {GlassCheckbox}=NS;
+  const rows=['Mark 1:1–13','Mark 1:14–20','Mark 1:21–28','Mark 1:29–34','Mark 1:35–39'];
+  function Card(){
+    const [sel,setSel]=React.useState(new Set([1,2]));
+    const all=sel.size===rows.length, some=sel.size>0&&!all;
+    const toggle=(i,on)=>setSel(s=>{const n=new Set(s);on?n.add(i):n.delete(i);return n;});
+    const h=React.createElement;
+    return h('div',{style:{display:'grid',gap:14}},
+      h('div',{style:{font:'var(--type-label)',color:'var(--text-muted)'}},'GlassCheckbox · 44px rows · Space/Enter'),
+      h('div',{style:{background:'var(--glass-fill-1)',border:'var(--border-glass)',borderRadius:'var(--r-xl)',padding:8,backdropFilter:'blur(var(--blur-soft))',WebkitBackdropFilter:'blur(var(--blur-soft))',display:'grid',gap:2}},
+        h(GlassCheckbox,{label:'Select all',checked:some?'mixed':all,onChange:on=>setSel(on?new Set(rows.map((_,i)=>i)):new Set())}),
+        ...rows.map((r,i)=>h(GlassCheckbox,{key:i,label:r,checked:sel.has(i),onChange:on=>toggle(i,on)}))),
+      h('div',{style:{display:'flex',gap:8,alignItems:'center'}},
+        h(GlassCheckbox,{'aria-label':'Unlabelled, off'}),h(GlassCheckbox,{'aria-label':'Unlabelled, on',checked:true}),
+        h(GlassCheckbox,{label:'Disabled',checked:true,disabled:true,style:{width:'auto'}})));
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Card));
+})();
+</script></body></html>
