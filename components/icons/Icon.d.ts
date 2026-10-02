@@ -1,4 +1,7 @@
-export type IconName='mic'|'navigation'|'plus'|'chevronLeft'|'chevronRight'|'arrowUpRight'|'bookmark'|'maximize'|'minimize'|'moon'|'sun'|'delete'|'shift'|'search'|'compass'|'sparkle';
+export type IconName='mic'|'navigation'|'plus'|'chevronLeft'|'chevronRight'|'arrowUpRight'|'bookmark'|'maximize'|'minimize'|'moon'|'sun'|'delete'|'shift'|'search'|'compass'|'sparkle'
+  |'book'|'headphones'|'users'|'check'|'cloudOff'|'globe'|'languages'|'x'
+  |'play'|'pause'|'download'|'image'|'chevronDown'|'share'|'warning'|'update'|'chat'
+  |'list'|'settings'|'message'|'tag'|'info'|'ellipsis'|'map'|'video';
 export interface IconProps{
   /** Glyph name. */
   name:IconName;
