@@ -1,9 +1,12 @@
 /* UI type: SF Pro Display / SF Pro Text, supplied by the project owner. Apple's licence
    covers Apple platforms and UI design work for them; the binaries stay out of public repos
    (CoS door). When they are absent the stacks below fall back to the system font.
-   Scripture type: one Noto Serif reading face per script (OFL), loaded from Google Fonts.
+   Scripture type: one Noto Serif reading face per script (OFL 1.1), self-hosted from
+   assets/fonts/ (no third-party request; works offline). Noto Serif TC sits in its own file
+   and folder so apps can keep its ~6 MB of Han subsets out of an offline precache.
    UI never changes with the scripture language; only the passage does. */
-@import url("https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;500&family=Noto+Serif+Hebrew:wght@400;500&family=Noto+Naskh+Arabic:wght@400;500&family=Noto+Serif+Devanagari:wght@400;500&family=Noto+Serif+Gujarati:wght@400;500&family=Noto+Serif+TC:wght@400;500&display=swap");
+@import url("fonts-noto.css");
+@import url("fonts-noto-tc.css");
 @font-face{font-family:'SF Pro Display';src:url("../assets/fonts/SF-Pro-Display-Regular.otf") format("opentype");font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:'SF Pro Display';src:url("../assets/fonts/SF-Pro-Display-Medium.otf") format("opentype");font-weight:500;font-style:normal;font-display:swap}
 @font-face{font-family:'SF Pro Display';src:url("../assets/fonts/SF-Pro-Display-Semibold.otf") format("opentype");font-weight:600;font-style:normal;font-display:swap}
