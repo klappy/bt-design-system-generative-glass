@@ -1,0 +1,53 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=390">
+<title>Progress preview</title>
+<!-- 390x844 preview of CountdownRing (K2) and StageRail / BeadStrip / Bead (K3), read straight from the .jsx files
+     (not _ds_bundle.js, which is compiled upstream; DEPLOY.md:13). ?theme=dark sets data-theme="dark"; ?motion=reduce
+     forces the reduced-motion path. Screenshots: progress.preview-light.png, progress.preview-dark.png. -->
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>*{box-sizing:border-box}html,body{margin:0}body{font-family:var(--font-core);background:var(--aurora-field);-webkit-font-smoothing:antialiased;min-height:844px;color:var(--text-title)}
+#root{width:390px;padding:20px 16px;display:grid;gap:14px}h1{font-size:17px;margin:0}h2{font-size:13px;margin:0 0 8px}p,.cap{font-size:12px;margin:0;color:var(--text-muted)}
+.card{padding:14px 16px;border-radius:22px;background:var(--glass-fill-2,rgba(255,255,255,.5));box-shadow:inset 0 0 0 1px var(--glass-stroke,rgba(255,255,255,.6))}
+.row{display:flex;gap:6px;padding:0 3px;justify-content:space-between;align-items:flex-start}.cell{display:grid;gap:6px;justify-items:center;font-size:11px;color:var(--text-muted);text-align:center}
+.disc{width:66px;height:66px;border-radius:999px;background:var(--surface-inverse);color:var(--text-on-inverse);display:grid;place-items:center}
+.legend{display:grid;grid-template-columns:repeat(2,1fr);gap:6px 10px;font-size:11px;color:var(--text-muted)}.legend span{display:flex;gap:6px;align-items:center}</style>
+<script>{const q=new URLSearchParams(location.search);if(q.get('theme')==='dark')document.documentElement.setAttribute('data-theme','dark');
+if(q.get('motion')==='reduce'){const m=window.matchMedia.bind(window);window.matchMedia=s=>/reduced-motion/.test(s)?{matches:true,media:s,addEventListener(){},removeEventListener(){}}:m(s);}}</script>
+</head><body><div id="root"></div>
+<script>
+(async()=>{
+  const load=async(f,names)=>{let s=await (await fetch(f)).text();s=s.replace(/^import\s+React.*$/m,'').replace(/^export\s+/mg,'');
+    const NS={};new Function('React','NS',Babel.transform(s+'\n;Object.assign(NS,{'+names+'});',{presets:['react']}).code)(React,NS);return NS;};
+  const NS=Object.assign({},await load('CountdownRing.jsx','CountdownRing'),await load('StageRail.jsx','StageRail,BeadStrip,Bead,beadKinds'));
+  const DR=await load('../glass/DotRing.jsx','DotRing'), IC=await load('../icons/Icon.jsx','Icon');
+  const h=React.createElement, dark=document.documentElement.dataset.theme==='dark';
+  const bar={width:7,height:24,borderRadius:2,background:'var(--text-on-inverse)'};
+  const glyph=n=>n==='pause'?h('span',{style:{display:'flex',gap:6}},h('span',{style:bar}),h('span',{style:bar})):h(IC.Icon,{name:n,size:30,color:'var(--text-on-inverse)'}); // pause: kit Icon has none until K1 (#8) lands
+  const ring=(v,label,extra)=>h('div',{className:'cell'},h(DR.DotRing,{size:108,rings:5,dots:24,color:dark?'rgba(255,255,255,.34)':'rgba(70,86,112,.34)'},
+      h(NS.CountdownRing,Object.assign({size:88,value:v},extra),h('span',{className:'disc'},glyph(extra&&extra.g||'chevronRight')))),h('span',null,label));
+  const steps=['Hear','Understand','Tell','Check','Talk','Remember'].map(t=>({title:t}));
+  const items=[{kind:'plain'},{kind:'scripture'},{kind:'term',more:true},{kind:'media',state:'current'},{kind:'plain',state:'upcoming'},{kind:'video',state:'upcoming'},{kind:'term',state:'upcoming'},{kind:'stop',state:'upcoming'}];
+  const K=['plain','scripture','term','media','video','stop','end'];
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment,null,
+    h('h1',null,'Progress — K2 + K3 ('+(dark?'dark':'light')+')'),
+    h('div',{className:'card'},h('h2',null,'CountdownRing (K2) inside DotRing'),
+      h('div',{className:'row'},ring(17/42,'Playing · 0:17',{g:'pause'}),ring(.62,'Next in 2 s',{duration:2,running:false,g:'pause'}),ring(0,'Next ready',{g:'chevronRight'})),
+      h('div',{className:'row',style:{marginTop:10,justifyContent:'center'}},ring(1,'Running · next in 2 s',{duration:2,running:true,g:'pause'})),
+      h('p',{style:{marginTop:8}},'Reduced motion: no sweep; the arc shows the value given and the label carries the time.')),
+    h('div',{className:'card'},h('h2',null,'StageRail + BeadStrip (K3)'),
+      h('div',{style:{display:'grid',gap:8}},
+        h('span',{className:'cap',style:{textTransform:'uppercase',letterSpacing:'.06em',fontSize:10}},'Mark 1:1–13 · Step 3 of 6'),
+        h('div',{style:{fontWeight:600}},'Tell'),
+        h(NS.StageRail,{stages:steps,current:2,progress:4/25}),
+        h(NS.BeadStrip,{before:1,after:2,items,label:'You are here, part 4 of 25. Talk after part 7.',style:{marginTop:4}}),
+        h('span',{className:'cap'},'Part 4 of 25 in this step · talk after part 7'))),
+    h('div',{className:'card'},h('h2',null,'Bead kinds and states'),
+      h('div',{className:'legend'},K.map(k=>h('span',{key:k},h(NS.Bead,{kind:k}),k)),
+        h('span',null,h(NS.Bead,{kind:'term',state:'done'}),'heard'),h('span',null,h(NS.Bead,{kind:'term',state:'upcoming'}),'ahead'),
+        h('span',null,h(NS.Bead,{kind:'term',state:'current',size:7}),'you are here'),h('span',null,h(NS.Bead,{kind:'term',more:true}),'more inside'))),
+    h('div',{className:'card'},h('h2',null,'Step 6 of 6, all done'),h(NS.StageRail,{stages:steps,current:6,label:'All six steps done'}))));
+  document.body.dataset.ready='1';
+})();
+</script></body></html>
