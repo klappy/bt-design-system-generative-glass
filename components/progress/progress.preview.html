@@ -34,6 +34,7 @@ if(q.get('motion')==='reduce'){const m=window.matchMedia.bind(window);window.mat
     h('h1',null,'Progress — K2 + K3 ('+(dark?'dark':'light')+')'),
     h('div',{className:'card'},h('h2',null,'CountdownRing (K2) inside DotRing'),
       h('div',{className:'row'},ring(17/42,'Playing · 0:17',{g:'pause'}),ring(.62,'Next in 2 s',{duration:2,running:false,g:'pause'}),ring(0,'Next ready',{g:'chevronRight'})),
+      h('div',{className:'row',style:{marginTop:10,justifyContent:'center'}},ring(1,'Running · next in 2 s',{duration:2,running:true,g:'pause'})),
       h('p',{style:{marginTop:8}},'Reduced motion: no sweep; the arc shows the value given and the label carries the time.')),
     h('div',{className:'card'},h('h2',null,'StageRail + BeadStrip (K3)'),
       h('div',{style:{display:'grid',gap:8}},
